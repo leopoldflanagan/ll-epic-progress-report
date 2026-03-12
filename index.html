@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Loyalty Epic Progress Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .header .extraction-date {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .summary-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-card .label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .summary-card.overall .number {
+            color: #3498db;
+        }
+        
+        .summary-card.done .number {
+            color: #27ae60;
+        }
+        
+        .summary-card.progress .number {
+            color: #f39c12;
+        }
+        
+        .summary-card.todo .number {
+            color: #95a5a6;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .filter-controls select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .epic-details {
+            margin-top: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .epic-details h3 {
+            padding: 20px;
+            background: #34495e;
+            color: white;
+            margin: 0;
+            font-size: 1.3rem;
+        }
+        
+        .epic-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .epic-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .epic-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .epic-item:last-child {
+            border-bottom: none;
+        }
+        
+        .epic-info {
+            flex: 1;
+        }
+        
+        .epic-key {
+            font-weight: bold;
+            color: #3498db;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        
+        .epic-key:hover {
+            text-decoration: underline;
+        }
+        
+        .epic-name {
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        
+        .epic-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .epic-status.backlog { background: #ecf0f1; color: #7f8c8d; }
+        .epic-status.discover { background: #fef9e7; color: #f39c12; }
+        .epic-status.design { background: #eaf2ff; color: #3498db; }
+        .epic-status.ready-to-develop { background: #e8f5e8; color: #27ae60; }
+        .epic-status.in-development { background: #e1f5fe; color: #2196f3; }
+        .epic-status.ready-deployment { background: #f3e5f5; color: #9c27b0; }
+        .epic-status.will-not-implement { background: #ffebee; color: #f44336; }
+        .epic-status.closed { background: #e8f5e8; color: #4caf50; }
+        
+        .epic-stats {
+            text-align: right;
+            min-width: 100px;
+        }
+        
+        .epic-percent {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .epic-counts {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 2px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-color.done { background-color: #27ae60; }
+        .legend-color.progress { background-color: #f39c12; }
+        .legend-color.todo { background-color: #bdc3c7; }
+        
+        #epicChart {
+            height: 800px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Launch Loyalty Epic Progress</h1>
+            <div class="subtitle">Epic completion tracking for stakeholder visibility</div>
+            <div class="extraction-date">Data extracted: March 10, 2026</div>
+        </div>
+        
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card overall">
+                <div class="number" id="overallPercent">28%</div>
+                <div class="label">Overall Complete</div>
+            </div>
+            <div class="summary-card done">
+                <div class="number" id="totalDone">56</div>
+                <div class="label">Stories Done</div>
+            </div>
+            <div class="summary-card progress">
+                <div class="number" id="totalInProgress">20</div>
+                <div class="label">Stories In Progress</div>
+            </div>
+            <div class="summary-card todo">
+                <div class="number" id="totalTodo">124</div>
+                <div class="label">Stories Todo</div>
+            </div>
+        </div>
+        
+        <!-- Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">Epic Progress by Completion Percentage</div>
+                <div class="filter-controls">
+                    <label for="statusFilter">Filter by Status:</label>
+                    <select id="statusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="IN-DEVELOPMENT">In Development</option>
+                        <option value="DESIGN">Design</option>
+                        <option value="DISCOVER">Discover</option>
+                        <option value="READY TO DEVELOP">Ready to Develop</option>
+                        <option value="Backlog">Backlog</option>
+                    </select>
+                </div>
+            </div>
+            <canvas id="epicChart"></canvas>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color done"></div>
+                    <span>Done</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color progress"></div>
+                    <span>In Progress</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color todo"></div>
+                    <span>Todo</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Epic Details List -->
+        <div class="epic-details">
+            <h3>Epic Details (Click epic keys to view in Jira)</h3>
+            <div class="epic-list" id="epicList">
+                <!-- Epic items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data from ll_epic_progress.json
+        const projectData = {
+            "project": "Launch Loyalty",
+            "extractedAt": "2026-03-10T12:00:00Z",
+            "totalStories": 201,
+            "totalEpics": 49,
+            "epics": [
+                {"key": "LL-242", "name": "First Round of Data Migration for Launch Loyalty to QA Environment", "epicStatus": "WILL NOT IMPLEMENT", "total": 5, "done": 5, "inProgress": 0, "todo": 0, "percentComplete": 100},
+                {"key": "LL-186", "name": "Management of the Doctors inside of Marketplace", "epicStatus": "Backlog", "total": 1, "done": 1, "inProgress": 0, "todo": 0, "percentComplete": 100},
+                {"key": "LL-418", "name": "Member Email Enhancements for Migration", "epicStatus": "Backlog", "total": 1, "done": 1, "inProgress": 0, "todo": 0, "percentComplete": 100},
+                {"key": "LL-233", "name": "Member portal honor max number of people", "epicStatus": "WILL NOT IMPLEMENT", "total": 6, "done": 6, "inProgress": 0, "todo": 0, "percentComplete": 100},
+                {"key": "LL-227", "name": "Plans Marketplace - Honor max number of people", "epicStatus": "WILL NOT IMPLEMENT", "total": 7, "done": 7, "inProgress": 0, "todo": 0, "percentComplete": 100},
+                {"key": "LL-27", "name": "Display Dynamic Exclusions", "epicStatus": "WILL NOT IMPLEMENT", "total": 4, "done": 3, "inProgress": 0, "todo": 1, "percentComplete": 75},
+                {"key": "LL-300", "name": "PMP - Create Plan Details Section", "epicStatus": "IN-DEVELOPMENT", "total": 4, "done": 3, "inProgress": 1, "todo": 0, "percentComplete": 75},
+                {"key": "LL-308", "name": "LL Dynamic Support Contact Info Displayed Across Portals", "epicStatus": "IN-DEVELOPMENT", "total": 19, "done": 11, "inProgress": 0, "todo": 8, "percentComplete": 58},
+                {"key": "LL-350", "name": "LL Updates to Plan Details PDF", "epicStatus": "IN-DEVELOPMENT", "total": 9, "done": 5, "inProgress": 1, "todo": 3, "percentComplete": 56},
+                {"key": "LL-273", "name": "Round 1 Custom Websites", "epicStatus": "IN-DEVELOPMENT", "total": 6, "done": 3, "inProgress": 0, "todo": 3, "percentComplete": 50},
+                {"key": "LL-398", "name": "RE - LL Marketing Details Updates", "epicStatus": "IN-DEVELOPMENT", "total": 10, "done": 4, "inProgress": 2, "todo": 4, "percentComplete": 40},
+                {"key": "LL-362", "name": "Data Services - Daily Data Pull - Additional Benefit Verbiage", "epicStatus": "DESIGN", "total": 6, "done": 2, "inProgress": 2, "todo": 2, "percentComplete": 33},
+                {"key": "LL-354", "name": "PMP and Purchase Portals - Plan is Tied to Practice at Time of Purchase", "epicStatus": "IN-DEVELOPMENT", "total": 6, "done": 2, "inProgress": 2, "todo": 2, "percentComplete": 33},
+                {"key": "LL-349", "name": "LL Additional Benefits Configuration and Member Portal Display", "epicStatus": "IN-DEVELOPMENT", "total": 8, "done": 2, "inProgress": 0, "todo": 6, "percentComplete": 25},
+                {"key": "LL-310", "name": "PMP Advanced Member Search", "epicStatus": "DESIGN", "total": 4, "done": 1, "inProgress": 0, "todo": 3, "percentComplete": 25},
+                {"key": "LL-361", "name": "ACH Frontend - Manage ACH Records in Plans Office Payments", "epicStatus": "DESIGN", "total": 3, "done": 0, "inProgress": 0, "todo": 3, "percentComplete": 0},
+                {"key": "LL-36", "name": "Admin Fee Changes", "epicStatus": "DISCOVER", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-155", "name": "Auto-Renewal Reports - Both Internal & Large Org", "epicStatus": "Backlog", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-228", "name": "CSP - Honor max number of people", "epicStatus": "READY TO DEVELOP", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-1", "name": "Embed Rules for Refunds of Admin Fees", "epicStatus": "Backlog", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-19", "name": "Enable Dynamic Website Display of Custom Plan Details Based on Onboarding Configuration", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-307", "name": "FE - Custom Website - Landing Page Forces Practice Selection", "epicStatus": "IN-DEVELOPMENT", "total": 7, "done": 0, "inProgress": 5, "todo": 2, "percentComplete": 0},
+                {"key": "LL-355", "name": "FE - Website - Add Link to Member Portal and Support Page", "epicStatus": "IN-DEVELOPMENT", "total": 2, "done": 0, "inProgress": 1, "todo": 1, "percentComplete": 0},
+                {"key": "LL-75", "name": "Hide Treatment Summaries in Member Portal for Non-Integrated Offices", "epicStatus": "DESIGN", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-199", "name": "Improve Plan Comparison Messaging and Flow for All Plan Types in Plans Marketplace", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-353", "name": "LL Auto Renewal Transaction Handling for Migrated Members", "epicStatus": "Backlog", "total": 4, "done": 0, "inProgress": 0, "todo": 4, "percentComplete": 0},
+                {"key": "LL-328", "name": "LL Data Migration and Onboarding for DCA", "epicStatus": "DESIGN", "total": 3, "done": 0, "inProgress": 0, "todo": 3, "percentComplete": 0},
+                {"key": "LL-352", "name": "LL Ensure Correct Administration Fee is Displayed", "epicStatus": "Backlog", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-120", "name": "Market Place - MVP -CSP Monthly Plans Config Set -Up", "epicStatus": "IN-DEVELOPMENT", "total": 2, "done": 0, "inProgress": 2, "todo": 0, "percentComplete": 0},
+                {"key": "LL-106", "name": "Marketplace - MVP - Member Portal Changes to Support Monthly Payments(FF)", "epicStatus": "DESIGN", "total": 6, "done": 0, "inProgress": 0, "todo": 6, "percentComplete": 0},
+                {"key": "LL-85", "name": "Marketplace - MVP - Subscription Purchases In inside Plans Purchase Widget - #6 (FF)", "epicStatus": "IN-DEVELOPMENT", "total": 10, "done": 0, "inProgress": 2, "todo": 8, "percentComplete": 0},
+                {"key": "LL-522", "name": "Member Portal LL Post MVP Work", "epicStatus": "Backlog", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-131", "name": "Phase 2 - QA Functional Testing for Marketplace", "epicStatus": "DESIGN", "total": 12, "done": 0, "inProgress": 0, "todo": 12, "percentComplete": 0},
+                {"key": "LL-49", "name": "Plan Design Changes to Intake in Plan Rules Set Up", "epicStatus": "DESIGN", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-54", "name": "Plan design details to Dynamically drive Benefit summaries", "epicStatus": "DESIGN", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-55", "name": "Plan Design Details to dynamically load Plan details document - PDF API", "epicStatus": "WILL NOT IMPLEMENT", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-115", "name": "Plans Marketplace - CSP Status in Search (FF)", "epicStatus": "READY TO DEVELOP", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-78", "name": "Plans Marketplace - Subscription Payment CRM Communication Changes", "epicStatus": "DESIGN", "total": 4, "done": 0, "inProgress": 0, "todo": 4, "percentComplete": 0},
+                {"key": "LL-167", "name": "PMP - Advanced Search beyond Practice", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-519", "name": "PMP Plan Details Post MVP", "epicStatus": "Backlog", "total": 1, "done": 0, "inProgress": 0, "todo": 1, "percentComplete": 0},
+                {"key": "LL-532", "name": "PMP Updates Pending Other Teams", "epicStatus": "Backlog", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-14", "name": "Provider Portal - honor max number of people", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-301", "name": "Purchase Portal/Smile Health - Display Max Number of People", "epicStatus": "Backlog", "total": 3, "done": 0, "inProgress": 0, "todo": 3, "percentComplete": 0},
+                {"key": "LL-309", "name": "Purchase Widget - Allow a Style Profile", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-472", "name": "Refactor Work Placeholder", "epicStatus": "Backlog", "total": 3, "done": 0, "inProgress": 1, "todo": 2, "percentComplete": 0},
+                {"key": "LL-306", "name": "RE - LL Plan Design & Pricing Changes to Support DCA", "epicStatus": "DESIGN", "total": 2, "done": 0, "inProgress": 0, "todo": 2, "percentComplete": 0},
+                {"key": "LL-351", "name": "RE - LL Purchase Widget to Support New Plan Pricing Type", "epicStatus": "DISCOVER", "total": 4, "done": 0, "inProgress": 0, "todo": 4, "percentComplete": 0},
+                {"key": "LL-248", "name": "RE - Sellable, Acceptable, and Renewable Plans by Organization and Practice", "epicStatus": "IN-DEVELOPMENT", "total": 7, "done": 0, "inProgress": 0, "todo": 7, "percentComplete": 0},
+                {"key": "LL-74", "name": "WAIVEFAM Promo Code Creation & Ability to Use", "epicStatus": "DISCOVER", "total": 2, "done": 0, "inProgress": 1, "todo": 1, "percentComplete": 0}
+            ],
+            "summary": {"totalDone": 56, "totalInProgress": 20, "totalTodo": 124, "overallPercent": 28}
+        };
+
+        // Sort epics by completion percentage (descending) and then by name
+        const sortedEpics = [...projectData.epics].sort((a, b) => {
+            if (b.percentComplete !== a.percentComplete) {
+                return b.percentComplete - a.percentComplete;
+            }
+            return a.name.localeCompare(b.name);
+        });
+
+        let chart;
+        let filteredEpics = sortedEpics;
+
+        // Initialize the page
+        function initialize() {
+            updateSummaryCards();
+            createChart();
+            populateEpicList();
+            setupFilterControls();
+        }
+
+        // Update summary cards with data
+        function updateSummaryCards() {
+            document.getElementById('overallPercent').textContent = projectData.summary.overallPercent + '%';
+            document.getElementById('totalDone').textContent = projectData.summary.totalDone;
+            document.getElementById('totalInProgress').textContent = projectData.summary.totalInProgress;
+            document.getElementById('totalTodo').textContent = projectData.summary.totalTodo;
+        }
+
+        // Create the Chart.js chart
+        function createChart() {
+            const ctx = document.getElementById('epicChart').getContext('2d');
+            
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: filteredEpics.map(epic => {
+                        const truncatedName = epic.name.length > 40 ? epic.name.substring(0, 37) + '...' : epic.name;
+                        return `${epic.key}: ${truncatedName}`;
+                    }),
+                    datasets: [
+                        {
+                            label: 'Done',
+                            data: filteredEpics.map(epic => epic.done),
+                            backgroundColor: '#27ae60',
+                            borderColor: '#229954',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'In Progress',
+                            data: filteredEpics.map(epic => epic.inProgress),
+                            backgroundColor: '#f39c12',
+                            borderColor: '#e67e22',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Todo',
+                            data: filteredEpics.map(epic => epic.todo),
+                            backgroundColor: '#bdc3c7',
+                            borderColor: '#95a5a6',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Stories'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Epics'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // We have our own custom legend
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const epicIndex = context[0].dataIndex;
+                                    const epic = filteredEpics[epicIndex];
+                                    return `${epic.key}: ${epic.name}`;
+                                },
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.x} stories`;
+                                },
+                                afterBody: function(context) {
+                                    const epicIndex = context[0].dataIndex;
+                                    const epic = filteredEpics[epicIndex];
+                                    return [
+                                        '',
+                                        `Status: ${epic.epicStatus}`,
+                                        `Total Stories: ${epic.total}`,
+                                        `Completion: ${epic.percentComplete}%`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const epicIndex = elements[0].index;
+                            const epic = filteredEpics[epicIndex];
+                            window.open(`https://wellfit.atlassian.net/browse/${epic.key}`, '_blank');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate the epic details list
+        function populateEpicList() {
+            const epicList = document.getElementById('epicList');
+            epicList.innerHTML = '';
+
+            filteredEpics.forEach(epic => {
+                const epicItem = document.createElement('div');
+                epicItem.className = 'epic-item';
+                
+                const statusClass = epic.epicStatus.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                
+                epicItem.innerHTML = `
+                    <div class="epic-info">
+                        <div>
+                            <a href="https://wellfit.atlassian.net/browse/${epic.key}" 
+                               class="epic-key" target="_blank">${epic.key}</a>
+                            <span class="epic-name">${epic.name}</span>
+                        </div>
+                        <div class="epic-status ${statusClass}">${epic.epicStatus}</div>
+                    </div>
+                    <div class="epic-stats">
+                        <div class="epic-percent">${epic.percentComplete}%</div>
+                        <div class="epic-counts">${epic.done}/${epic.total} stories</div>
+                    </div>
+                `;
+                
+                epicList.appendChild(epicItem);
+            });
+        }
+
+        // Setup filter controls
+        function setupFilterControls() {
+            const statusFilter = document.getElementById('statusFilter');
+            
+            statusFilter.addEventListener('change', (e) => {
+                const selectedStatus = e.target.value;
+                
+                if (selectedStatus === 'all') {
+                    filteredEpics = sortedEpics;
+                } else {
+                    filteredEpics = sortedEpics.filter(epic => epic.epicStatus === selectedStatus);
+                }
+                
+                // Update chart and list
+                updateChart();
+                populateEpicList();
+            });
+        }
+
+        // Update chart with filtered data
+        function updateChart() {
+            chart.data.labels = filteredEpics.map(epic => {
+                const truncatedName = epic.name.length > 40 ? epic.name.substring(0, 37) + '...' : epic.name;
+                return `${epic.key}: ${truncatedName}`;
+            });
+            
+            chart.data.datasets[0].data = filteredEpics.map(epic => epic.done);
+            chart.data.datasets[1].data = filteredEpics.map(epic => epic.inProgress);
+            chart.data.datasets[2].data = filteredEpics.map(epic => epic.todo);
+            
+            chart.update();
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>
