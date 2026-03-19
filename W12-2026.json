@@ -1,0 +1,46 @@
+{
+  "week": "W12-2026",
+  "date": "2026-03-19",
+  "summary": {
+    "totalEpics": 43,
+    "totalStories": 178,
+    "completedStories": 54,
+    "percentComplete": 30,
+    "excludedEpics": {
+      "wni": 16,
+      "reenbit": 6,
+      "total": 22
+    }
+  },
+  "storyDistribution": {
+    "done": 54,
+    "inProgress": 48,
+    "readyToDevelop": 38,
+    "backlog": 38
+  },
+  "epicDistribution": {
+    "closed": 4,
+    "readyDeployment": 3,
+    "inDevelopment": 20,
+    "readyToDevelop": 9,
+    "design": 4,
+    "discover": 2,
+    "backlog": 1
+  },
+  "throughput": {
+    "last30Days": 35,
+    "averagePerWeek": 9
+  },
+  "newEpics": [
+    "LL-575",
+    "LL-601",
+    "LL-598",
+    "LL-618"
+  ],
+  "changedEpics": [
+    {
+      "key": "LL-472",
+      "change": "Reclassified as Reenbit epic (RE -)"
+    }
+  ]
+}

@@ -18,11 +18,22 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 
 /* Header */
 .header{margin-bottom:28px}
-.header h1{font-size:30px;font-weight:800;letter-spacing:-.3px;margin-bottom:6px}
-.header-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:4px}
-.date-pill{display:inline-flex;align-items:center;gap:6px;background:#0f172a;color:#fff;padding:5px 14px;border-radius:6px;font-size:13px;font-weight:600}
-.date-pill svg{width:14px;height:14px;fill:currentColor}
-.meta-text{font-size:14px;color:var(--muted)}
+.header h1{font-size:30px;font-weight:800;letter-spacing:-.3px;margin-bottom:16px}
+
+/* Week Selector Prominente */
+.week-selector-prominent{background:var(--card);padding:16px 20px;border-radius:10px;margin-bottom:16px;box-shadow:0 2px 4px rgba(0,0,0,.08)}
+.week-selector-prominent label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.week-selector-prominent select{font-size:16px;font-weight:700;padding:10px 16px;width:100%;max-width:400px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer}
+.baseline-indicator{display:block;font-size:13px;color:var(--muted);margin-top:6px}
+
+/* Meta Box */
+.meta-box{background:#f8fafc;padding:12px 16px;border-radius:8px;border:1px solid #e2e8f0}
+.meta-line{font-size:14px;margin:4px 0}
+.meta-line strong{font-weight:600;color:var(--text)}
+.delta-line{margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0}
+.delta{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:8px}
+.delta.up{background:#dcfce7;color:#15803d}
+.delta.down{background:#fee2e2;color:#991b1b}
 
 /* Cards */
 .cards{display:grid;grid-template-columns:auto repeat(3,1fr);gap:16px;margin-bottom:28px}
@@ -31,12 +42,52 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .card-lbl{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:6px}
 .card-val.v-done{color:var(--done)}.card-val.v-ip{color:var(--inprog)}.card-val.v-todo{color:var(--backlog)}
 
+/* Comparison Cards */
+.comparison-panel{background:var(--card);border-radius:14px;padding:20px 24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
+.comparison-panel h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text)}
+.comparison-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.comp-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;text-align:center}
+.comp-card-label{font-size:12px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.comp-card-change{display:flex;flex-direction:column;align-items:center;gap:4px;margin:12px 0}
+.comp-prev{font-size:16px;font-weight:600;color:var(--muted)}
+.comp-arrow{font-size:20px;color:var(--muted)}
+.comp-current{font-size:28px;font-weight:800;color:var(--text)}
+.comp-metric{font-size:11px;color:var(--muted);margin-top:4px}
+.comp-delta{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;margin-top:8px}
+.comp-delta.positive{background:#dcfce7;color:#15803d}
+.comp-delta.negative{background:#fee2e2;color:#991b1b}
+.comp-delta.neutral{background:#f1f5f9;color:var(--muted)}
+
 /* Circular progress */
 .circ-wrap{position:relative;width:110px;height:110px;margin-bottom:6px}
 .circ-wrap svg{width:110px;height:110px;transform:rotate(-90deg)}
 .circ-bg{fill:none;stroke:#e2e8f0;stroke-width:10}
 .circ-fg{fill:none;stroke:var(--indev);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
 .circ-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:var(--indev)}
+
+/* Scope Changes Panel */
+.scope-panel{background:var(--card);border-radius:14px;padding:20px 24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
+.scope-panel.collapsed .scope-body{display:none}
+.scope-header{cursor:pointer;user-select:none}
+.scope-header h2{font-size:20px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.scope-summary{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
+.scope-metric{font-size:13px;font-weight:600;padding:6px 12px;background:#f1f5f9;border-radius:6px;color:var(--text)}
+.scope-toggle{margin-top:12px;padding:8px 20px;background:var(--indev);color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px;transition:background .2s}
+.scope-toggle:hover{background:#1d4ed8}
+.scope-body{margin-top:20px;padding-top:20px;border-top:2px solid #f1f5f9}
+.scope-section{margin-bottom:24px}
+.scope-section:last-child{margin-bottom:0}
+.scope-section h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:6px}
+.scope-item{padding:8px 12px;background:#fafbfc;border-radius:6px;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.scope-item a{font-weight:700;color:var(--indev);text-decoration:none;font-size:13px}
+.scope-item a:hover{text-decoration:underline}
+.scope-item-name{font-size:13px;color:var(--text);flex:1;min-width:200px}
+.scope-item-count{font-size:12px;font-weight:600;color:var(--muted);margin-left:auto}
+.scope-item-reason{font-size:12px;color:var(--muted);font-style:italic}
+.net-impact{background:#f8fafc;padding:16px;border-radius:8px;border:2px solid #e2e8f0}
+.net-impact h4{margin-bottom:8px}
+.net-impact p{font-size:14px;line-height:1.6;color:var(--text)}
+.refinement-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:10px;padding:8px 12px;background:#fef3c7;border-radius:6px;border-left:3px solid #d97706}
 
 /* Filter + legend row */
 .controls{display:flex;align-items:center;gap:24px;margin-bottom:22px;flex-wrap:wrap}
@@ -73,7 +124,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .b-Backlog{background:#f1f5f9;color:#475569}
 .b-BLOCKED{background:#fee2e2;color:#991b1b}
 
-/* Border colors for rows */
+/* Border colors */
 .bl-CLOSED{border-left-color:var(--closed)!important}
 .bl-READY_DEPLOYMENT{border-left-color:var(--readydeploy)!important}
 .bl-IN-DEVELOPMENT{border-left-color:var(--indev)!important}
@@ -83,7 +134,7 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .bl-Backlog{border-left-color:var(--backlog)!important}
 .bl-BLOCKED{border-left-color:var(--blocked)!important}
 
-/* ---- CHART BAR ROWS ---- */
+/* Chart bar rows */
 .br{display:grid;grid-template-columns:370px 1fr 52px;align-items:center;gap:10px;padding:5px 0 5px 10px;border-bottom:1px solid #f1f5f9;border-left:3px solid transparent;transition:background .1s}
 .br:hover{background:#fafbfc}
 .br-lbl{display:flex;align-items:center;gap:7px;font-size:13px;line-height:1.35;min-width:0}
@@ -101,12 +152,11 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 .bs-lbl{font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap;pointer-events:none;line-height:1}
 .br-pct{font-size:13px;font-weight:700;text-align:right;white-space:nowrap;color:var(--text)}
 
-/* ---- DETAILS SECTION ---- */
+/* Details section */
 .details-scroll{max-height:720px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#cbd5e1 #f1f5f9}
 .details-scroll::-webkit-scrollbar{width:6px}
 .details-scroll::-webkit-scrollbar-track{background:#f1f5f9;border-radius:3px}
 .details-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-
 .dc{padding:11px 0 11px 10px;border-bottom:1px solid #f1f5f9;border-left:3px solid transparent}
 .dc:hover{background:#fafbfc}
 .dc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-wrap:wrap}
@@ -128,40 +178,57 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
 @media(max-width:1000px){
   .cards{grid-template-columns:repeat(2,1fr)}
   .br{grid-template-columns:220px 1fr 46px}
+  .comparison-cards{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .page{padding:16px}
   .cards{grid-template-columns:1fr 1fr}
   .br{grid-template-columns:1fr;gap:4px}
   .br-lbl{grid-column:1/-1}
+  .week-selector-prominent select{max-width:100%}
+  .comparison-cards{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <div class="page">
 
-<!-- HEADER -->
 <div class="header">
   <h1>Launch Loyalty — Epic Progress</h1>
-  <div class="header-meta">
-    <span class="date-pill">
-      <svg viewBox="0 0 16 16"><path d="M4.5 1a.5.5 0 0 1 .5.5V3h6V1.5a.5.5 0 0 1 1 0V3h1.5A1.5 1.5 0 0 1 15 4.5v9A1.5 1.5 0 0 1 13.5 15h-11A1.5 1.5 0 0 1 1 13.5v-9A1.5 1.5 0 0 1 2.5 3H4V1.5a.5.5 0 0 1 .5-.5zM2 6v7.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V6H2z"/></svg>
-      Data extracted: March 11, 2026
-    </span>
-    <span class="meta-text">40 Epics &middot; 157 Stories &middot; Excludes 16 WNI epics, 5 Reenbit epics, admin-tracking stories</span>
+  
+  <div class="week-selector-prominent">
+    <label for="weekSelect">Reporting Week</label>
+    <select id="weekSelect">
+      <option value="W11-2026">W11, 2026 — March 15</option>
+      <option value="W12-2026" selected>W12, 2026 — March 19</option>
+    </select>
+    <span class="baseline-indicator">Compare to: W11 (baseline)</span>
   </div>
+  
+  <div class="meta-box" id="metaBox"></div>
 </div>
 
-<!-- SUMMARY CARDS -->
 <div class="cards" id="summaryCards"></div>
 
-<!-- FILTER + LEGEND -->
+<!-- COMPARISON CARDS -->
+<div class="comparison-panel" id="comparisonPanel" style="display:none">
+  <h2 id="comparisonTitle">📊 Week-over-Week Comparison</h2>
+  <div class="comparison-cards" id="comparisonCards"></div>
+</div>
+
+<div class="scope-panel collapsed" id="scopePanel" style="display:none">
+  <div class="scope-header" onclick="toggleScope()">
+    <h2 id="scopeTitle">📊 Scope Changes</h2>
+    <div class="scope-summary" id="scopeSummary"></div>
+    <button class="scope-toggle" id="scopeToggleBtn">View Details ▼</button>
+  </div>
+  <div class="scope-body" id="scopeBody"></div>
+</div>
+
 <div class="controls">
   <div class="filter-grp">
     <label for="sf">Filter by Status:</label>
-    <select id="sf" onchange="render()">
-      <option value="ALL">All Statuses</option>
-    </select>
+    <select id="sf"><option value="ALL">All Statuses</option></select>
   </div>
   <div class="legend">
     <div class="legend-item"><div class="legend-sw" style="background:var(--done)"></div>Done</div>
@@ -170,89 +237,40 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
   </div>
 </div>
 
-<!-- CHART -->
 <div class="panel">
   <h2>Progress by Epic</h2>
   <div id="chart"></div>
 </div>
 
-<!-- DETAILS -->
 <div class="panel">
   <h2>Epic Details</h2>
-  <div id="details" class="details-scroll"></div>
+  <div class="details-scroll" id="details"></div>
 </div>
 
-</div><!-- .page -->
+</div>
 
 <script>
-/* ===== DATA ===== */
-const D={
- project:"Launch Loyalty",
- extractedAt:"2026-03-11T19:00:00Z",
- totalStories:157,totalEpics:40,
- summary:{totalDone:32,totalInProgress:20,totalTodo:105,overallPercent:20},
- epics:[
-  {key:"LL-186",name:"Management of the Doctors inside of Marketplace",epicStatus:"Backlog",total:1,done:1,inProgress:0,todo:0,percentComplete:100},
-  {key:"LL-418",name:"Member Email Enhancements for Migration",epicStatus:"Backlog",total:1,done:1,inProgress:0,todo:0,percentComplete:100},
-  {key:"LL-300",name:"PMP - Create Plan Details Section",epicStatus:"IN-DEVELOPMENT",total:4,done:3,inProgress:1,todo:0,percentComplete:75},
-  {key:"LL-308",name:"LL Dynamic Support Contact Info Displayed Across Portals",epicStatus:"IN-DEVELOPMENT",total:19,done:11,inProgress:0,todo:8,percentComplete:58},
-  {key:"LL-350",name:"LL Updates to Plan Details PDF",epicStatus:"IN-DEVELOPMENT",total:9,done:5,inProgress:1,todo:3,percentComplete:56},
-  {key:"LL-273",name:"Round 1 Custom Websites",epicStatus:"IN-DEVELOPMENT",total:6,done:3,inProgress:0,todo:3,percentComplete:50},
-  {key:"LL-362",name:"Data Services - Daily Data Pull - Additional Benefit Verbiage",epicStatus:"DESIGN",total:6,done:2,inProgress:2,todo:2,percentComplete:33},
-  {key:"LL-354",name:"PMP and Purchase Portals - Plan is Tied to Practice at Time of Purchase",epicStatus:"IN-DEVELOPMENT",total:6,done:2,inProgress:2,todo:2,percentComplete:33},
-  {key:"LL-349",name:"LL Additional Benefits Configuration and Member Portal Display",epicStatus:"IN-DEVELOPMENT",total:8,done:2,inProgress:0,todo:6,percentComplete:25},
-  {key:"LL-310",name:"PMP Advanced Member Search",epicStatus:"DESIGN",total:4,done:1,inProgress:0,todo:3,percentComplete:25},
-  {key:"LL-472",name:"Refactor Work Placeholder",epicStatus:"Backlog",total:7,done:1,inProgress:1,todo:5,percentComplete:14},
-  {key:"LL-361",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"DESIGN",total:3,done:0,inProgress:0,todo:3,percentComplete:0},
-  {key:"LL-36",name:"Admin Fee Changes",epicStatus:"DISCOVER",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-155",name:"Auto-Renewal Reports - Both Internal & Large Org",epicStatus:"Backlog",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-228",name:"CSP - Honor max number of people",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-1",name:"Embed Rules for Refunds of Admin Fees",epicStatus:"Backlog",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-19",name:"Enable Dynamic Website Display of Custom Plan Details Based on Onboarding Configuration",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-307",name:"FE - Custom Website - Landing Page Forces Practice Selection",epicStatus:"IN-DEVELOPMENT",total:7,done:0,inProgress:6,todo:1,percentComplete:0},
-  {key:"LL-355",name:"FE - Website - Add Link to Member Portal and Support Page",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},
-  {key:"LL-75",name:"Hide Treatment Summaries in Member Portal for Non-Integrated Offices",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-199",name:"Improve Plan Comparison Messaging and Flow for All Plan Types in Plans Marketplace",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-353",name:"LL Auto Renewal Transaction Handling for Migrated Members",epicStatus:"Backlog",total:4,done:0,inProgress:0,todo:4,percentComplete:0},
-  {key:"LL-328",name:"LL Data Migration and Onboarding for DCA",epicStatus:"DESIGN",total:3,done:0,inProgress:0,todo:3,percentComplete:0},
-  {key:"LL-352",name:"LL Ensure Correct Administration Fee is Displayed",epicStatus:"Backlog",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-120",name:"Market Place - MVP - CSP Monthly Plans Config Set-Up",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},
-  {key:"LL-106",name:"Marketplace - MVP - Member Portal Changes to Support Monthly Payments (FF)",epicStatus:"DESIGN",total:6,done:0,inProgress:0,todo:6,percentComplete:0},
-  {key:"LL-85",name:"Marketplace - MVP - Subscription Purchases in Plans Purchase Widget - #6 (FF)",epicStatus:"IN-DEVELOPMENT",total:10,done:0,inProgress:2,todo:8,percentComplete:0},
-  {key:"LL-522",name:"Member Portal LL Post MVP Work",epicStatus:"Backlog",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:0,todo:12,percentComplete:0},
-  {key:"LL-49",name:"Plan Design Changes to Intake in Plan Rules Set Up",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-54",name:"Plan design details to Dynamically drive Benefit summaries",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-78",name:"Plans Marketplace - Subscription Payment CRM Communication Changes",epicStatus:"DESIGN",total:4,done:0,inProgress:0,todo:4,percentComplete:0},
-  {key:"LL-167",name:"PMP - Advanced Search beyond Practice",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-519",name:"PMP Plan Details Post MVP",epicStatus:"Backlog",total:1,done:0,inProgress:0,todo:1,percentComplete:0},
-  {key:"LL-532",name:"PMP Updates Pending Other Teams",epicStatus:"Backlog",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-14",name:"Provider Portal - honor max number of people",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-301",name:"Purchase Portal/Smile Health - Display Max Number of People",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0},
-  {key:"LL-309",name:"Purchase Widget - Allow a Style Profile",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},
-  {key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"DISCOVER",total:2,done:0,inProgress:1,todo:1,percentComplete:0}
- ]
-};
+const WEEKS={'W11-2026':{date:'March 15, 2026',totalEpics:40,totalStories:157,excludedWNI:16,excludedReebit:5,summary:{totalDone:31,totalInProgress:20,totalTodo:106,overallPercent:20},epics:[{key:"LL-399",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-166",name:"Management of the Doctors inside of Marketplace",epicStatus:"CLOSED",total:9,done:9,inProgress:0,todo:0,percentComplete:100},{key:"LL-318",name:"Member Email Enhancements for Migration",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"PMP - Create Plan Details Section",epicStatus:"READY DEPLOYMENT",total:11,done:9,inProgress:0,todo:2,percentComplete:82},{key:"LL-338",name:"LL Dynamic Contact Info Displayed/Used",epicStatus:"READY DEPLOYMENT",total:5,done:4,inProgress:1,todo:0,percentComplete:80},{key:"LL-373",name:"Reenbit Custom Websites - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:1,todo:0,percentComplete:50},{key:"LL-234",name:"PMP and Purchase Portals - Plan to Text in Practice",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-348",name:"Additional Benefits Configuration and Member Portal",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},{key:"LL-65",name:"Marketplace - MVP - Subscription Purchases (P1)",epicStatus:"IN-DEVELOPMENT",total:7,done:3,inProgress:1,todo:3,percentComplete:43},{key:"LL-307",name:"LL Custom Website - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-393",name:"Marketplace - MVP - CSR Widget Config Set-up",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:0,todo:1,percentComplete:50},{key:"LL-111",name:"Market Place - MVP - Member Portal Support",epicStatus:"IN-DEVELOPMENT",total:13,done:7,inProgress:1,todo:5,percentComplete:54},{key:"LL-122",name:"Market Place - MVP - CSR Pricing Config Set-up",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-273",name:"Reenbit Custom Websites",epicStatus:"IN-DEVELOPMENT",total:3,done:2,inProgress:1,todo:0,percentComplete:67},{key:"LL-343",name:"Data Services - Daily Data Pull - Additional Benefit",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:1,todo:1,percentComplete:0},{key:"LL-193",name:"PMP Advanced Member Search",epicStatus:"IN-DEVELOPMENT",total:4,done:1,inProgress:0,todo:3,percentComplete:25},{key:"LL-191",name:"Phase 1 - Q1 Functional Testing for Marketplace",epicStatus:"IN-DEVELOPMENT",total:6,done:3,inProgress:2,todo:1,percentComplete:50},{key:"LL-472",name:"Reenbit Work Placeholder",epicStatus:"IN-DEVELOPMENT",total:4,done:2,inProgress:2,todo:0,percentComplete:50},{key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:0,todo:12,percentComplete:0},{key:"LL-49",name:"Plan Design Changes to Intake in Plan Rules Set Up",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-54",name:"Plan design details to Dynamically drive Benefit summaries",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-78",name:"Plans Marketplace - Subscription Payment CRM Changes",epicStatus:"DESIGN",total:4,done:0,inProgress:0,todo:4,percentComplete:0},{key:"LL-167",name:"PMP - Advanced Search beyond Practice",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-519",name:"PMP Plan Details Post MVP",epicStatus:"Backlog",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-532",name:"PMP Updates Pending Other Teams",epicStatus:"Backlog",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-14",name:"Provider Portal - honor max number of people",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-301",name:"Purchase Portal/Smile Health - Display Max People",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-309",name:"Purchase Widget - Allow a Style Profile",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"DISCOVER",total:2,done:0,inProgress:1,todo:1,percentComplete:0}]},'W12-2026':{date:'March 19, 2026',totalEpics:43,totalStories:178,excludedWNI:16,excludedReebit:6,summary:{totalDone:54,totalInProgress:48,totalTodo:76,overallPercent:30},epics:[{key:"LL-166",name:"Management of the Doctors inside of Marketplace",epicStatus:"CLOSED",total:9,done:9,inProgress:0,todo:0,percentComplete:100},{key:"LL-318",name:"Member Email Enhancements for Migration",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-393",name:"Marketplace - MVP - CSR Widget Config Set-up",epicStatus:"CLOSED",total:2,done:2,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"PMP - Create Plan Details Section",epicStatus:"READY DEPLOYMENT",total:11,done:9,inProgress:2,todo:0,percentComplete:82},{key:"LL-338",name:"LL Dynamic Contact Info Displayed/Used",epicStatus:"READY DEPLOYMENT",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-273",name:"Reenbit Custom Websites",epicStatus:"READY DEPLOYMENT",total:3,done:3,inProgress:0,todo:0,percentComplete:100},{key:"LL-65",name:"Marketplace - MVP - Subscription Purchases (P1)",epicStatus:"IN-DEVELOPMENT",total:7,done:3,inProgress:2,todo:2,percentComplete:43},{key:"LL-111",name:"Market Place - MVP - Member Portal Support",epicStatus:"IN-DEVELOPMENT",total:13,done:7,inProgress:3,todo:3,percentComplete:54},{key:"LL-122",name:"Market Place - MVP - CSR Pricing Config",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-191",name:"Phase 1 - Q1 Functional Testing",epicStatus:"IN-DEVELOPMENT",total:6,done:3,inProgress:2,todo:1,percentComplete:50},{key:"LL-193",name:"PMP Advanced Member Search",epicStatus:"IN-DEVELOPMENT",total:4,done:1,inProgress:2,todo:1,percentComplete:25},{key:"LL-234",name:"PMP and Purchase Portals - Plan to Text in Practice",epicStatus:"IN-DEVELOPMENT",total:4,done:0,inProgress:3,todo:1,percentComplete:0},{key:"LL-307",name:"LL Custom Website - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-343",name:"Data Services - Daily Data Pull",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},{key:"LL-348",name:"Additional Benefits Configuration and Member Portal",epicStatus:"IN-DEVELOPMENT",total:5,done:0,inProgress:4,todo:1,percentComplete:0},{key:"LL-373",name:"Reenbit Custom Websites - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:1,todo:0,percentComplete:50},{key:"LL-575",name:"Marketplace Dental Plan Details - Copays",epicStatus:"IN-DEVELOPMENT",total:3,done:0,inProgress:2,todo:1,percentComplete:0},{key:"LL-601",name:"Member Portal - Manage Subscription MVP",epicStatus:"IN-DEVELOPMENT",total:8,done:0,inProgress:6,todo:2,percentComplete:0},{key:"LL-598",name:"Plans Marketplace - Subscription Payment CRM Changes",epicStatus:"IN-DEVELOPMENT",total:4,done:0,inProgress:3,todo:1,percentComplete:0},{key:"LL-14",name:"Provider Portal - honor max number of people",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-49",name:"Plan Design Changes to Intake in Plan Rules",epicStatus:"READY TO DEVELOP",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-54",name:"Plan design details to Dynamically drive Benefit summaries",epicStatus:"READY TO DEVELOP",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-167",name:"PMP - Advanced Search beyond Practice",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-309",name:"Purchase Widget - Allow a Style Profile",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-618",name:"Phase 3 - Q2 Functional Testing for Marketplace",epicStatus:"READY TO DEVELOP",total:10,done:0,inProgress:0,todo:10,percentComplete:0},{key:"LL-78",name:"Plans Marketplace - Plan Setup for Payment Options",epicStatus:"DESIGN",total:4,done:0,inProgress:2,todo:2,percentComplete:0},{key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:4,todo:8,percentComplete:0},{key:"LL-187",name:"PMP - Plan Details Section Post-MVP Refinements",epicStatus:"DESIGN",total:5,done:0,inProgress:2,todo:3,percentComplete:0},{key:"LL-228",name:"Plans Marketplace - CSP Widget Customization",epicStatus:"DESIGN",total:3,done:0,inProgress:2,todo:1,percentComplete:0},{key:"LL-519",name:"PMP Plan Details Post MVP",epicStatus:"DISCOVER",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-532",name:"PMP Updates Pending Other Teams",epicStatus:"DISCOVER",total:2,done:0,inProgress:1,todo:1,percentComplete:0},{key:"LL-301",name:"Purchase Portal/Smile Health - Display Max People",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0}],scopeChanges:{addedEpics:[{key:'LL-575',name:'Marketplace Dental Plan Details - Copays'},{key:'LL-601',name:'Member Portal - Manage Subscription MVP'},{key:'LL-618',name:'Phase 3 - Q2 Functional Testing for Marketplace'}],movedToReebit:[{key:'LL-472',name:'Reenbit Work Placeholder'}],storyBreakdownChanges:[{key:'LL-234',name:'PMP and Purchase Portals - Plan to Text in Practice',was:1,now:4,delta:3},{key:'LL-348',name:'Additional Benefits Configuration and Member Portal',was:2,now:5,delta:3}],metrics:{baselineEpics:40,currentEpics:43,added:3,moved:1,netChange:2,percentChange:5.0}}}};
 
-/* ===== CONFIG ===== */
 const ORDER=['CLOSED','READY DEPLOYMENT','IN-DEVELOPMENT','READY TO DEVELOP','DESIGN','DISCOVER','Backlog','BLOCKED'];
 const LABELS={'CLOSED':'Closed','READY DEPLOYMENT':'Ready Deployment','IN-DEVELOPMENT':'In Development','READY TO DEVELOP':'Ready to Develop','DESIGN':'Design','DISCOVER':'Discover','Backlog':'Backlog','BLOCKED':'Blocked'};
-function bCls(s){return 'b-'+s.replace(/ /g,'_')}
-function blCls(s){return 'bl-'+s.replace(/ /g,'_')}
-const MIN_W=30; // min segment px width
+function bCls(s){return'b-'+s.replace(/ /g,'_')}
+function blCls(s){return'bl-'+s.replace(/ /g,'_')}
+const MIN_W=30;
 
-/* ===== HELPERS ===== */
+let currentWeek='W12-2026';
+let D=WEEKS[currentWeek];
+
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function jira(k){return 'https://wellfit.atlassian.net/browse/'+k}
-function badge(s){return '<span class="badge '+bCls(s)+'">'+(LABELS[s]||s)+'</span>'}
+function jira(k){return'https://wellfit.atlassian.net/browse/'+k}
+function badge(s){return'<span class="badge '+bCls(s)+'">'+(LABELS[s]||s)+'</span>'}
 
 function segs(e,trackCls){
   const parts=[];
-  if(e.done>0) parts.push({n:e.done,c:'bs-d'});
-  if(e.inProgress>0) parts.push({n:e.inProgress,c:'bs-i'});
-  if(e.todo>0) parts.push({n:e.todo,c:'bs-t'});
-  if(!parts.length) return '<div class="'+trackCls+'"><div class="bs bs-t" style="flex:1;min-width:'+MIN_W+'px"></div></div>';
+  if(e.done>0)parts.push({n:e.done,c:'bs-d'});
+  if(e.inProgress>0)parts.push({n:e.inProgress,c:'bs-i'});
+  if(e.todo>0)parts.push({n:e.todo,c:'bs-t'});
+  if(!parts.length)return'<div class="'+trackCls+'"><div class="bs bs-t" style="flex:1;min-width:'+MIN_W+'px"></div></div>';
   let h='<div class="'+trackCls+'">';
   parts.forEach(p=>{h+='<div class="bs '+p.c+'" style="flex:'+p.n+';min-width:'+MIN_W+'px"><span class="bs-lbl">'+p.n+'</span></div>'});
   return h+'</div>';
@@ -271,10 +289,143 @@ function toggle(id){
   document.getElementById(id+'-a').classList.toggle('collapsed');
 }
 
-/* ===== SUMMARY CARDS ===== */
+function toggleScope(){
+  const panel=document.getElementById('scopePanel');
+  const btn=document.getElementById('scopeToggleBtn');
+  panel.classList.toggle('collapsed');
+  btn.textContent=panel.classList.contains('collapsed')?'View Details ▼':'Collapse ▲';
+}
+
+function updateMetaBox(){
+  const prev=currentWeek==='W11-2026'?null:WEEKS['W11-2026'];
+  let html=`<div class="meta-line"><strong>Active Scope:</strong> ${D.totalEpics} Epics, ${D.totalStories} Stories</div>`;
+  html+=`<div class="meta-line"><strong>Excluded:</strong> ${D.excludedWNI} WNI epics, ${D.excludedReebit} Reenbit epics</div>`;
+  if(prev){
+    const epicDelta=D.totalEpics-prev.totalEpics;
+    const storyDelta=D.totalStories-prev.totalStories;
+    html+=`<div class="meta-line delta-line">`;
+    html+=`<span class="delta ${epicDelta>=0?'up':'down'}">${epicDelta>=0?'+':''}${epicDelta} epics</span>`;
+    html+=`<span class="delta ${storyDelta>=0?'up':'down'}">${storyDelta>=0?'+':''}${storyDelta} stories</span>`;
+    html+=`vs W11</div>`;
+  }
+  document.getElementById('metaBox').innerHTML=html;
+}
+
+function renderScopeChanges(){
+  const sc=D.scopeChanges;
+  if(!sc){
+    document.getElementById('scopePanel').style.display='none';
+    return;
+  }
+  document.getElementById('scopePanel').style.display='block';
+  document.getElementById('scopeTitle').textContent=`📊 Scope Changes (${currentWeek} vs W11)`;
+  const m=sc.metrics;
+  let summaryHTML=`<span class="scope-metric">+${m.percentChange.toFixed(1)}% Epic Growth (${m.baselineEpics} → ${m.currentEpics})</span>`;
+  summaryHTML+=`<span class="scope-metric">+${sc.addedEpics.length} New Epics</span>`;
+  if(sc.movedToReebit.length>0)summaryHTML+=`<span class="scope-metric">${sc.movedToReebit.length} Reclassified</span>`;
+  document.getElementById('scopeSummary').innerHTML=summaryHTML;
+  let bodyHTML='';
+  if(sc.addedEpics.length>0){
+    bodyHTML+=`<div class="scope-section"><h4>✅ NEW EPICS ADDED (${sc.addedEpics.length})</h4>`;
+    sc.addedEpics.forEach(e=>{
+      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span></div>`;
+    });
+    bodyHTML+=`</div>`;
+  }
+  if(sc.movedToReebit.length>0){
+    bodyHTML+=`<div class="scope-section"><h4>⚠️ SCOPE MOVEMENTS</h4>`;
+    sc.movedToReebit.forEach(e=>{
+      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-reason">→ Moved to Reenbit vendor scope</span></div>`;
+    });
+    bodyHTML+=`</div>`;
+  }
+  if(sc.storyBreakdownChanges.length>0){
+    bodyHTML+=`<div class="scope-section"><h4>ℹ️ STORY REFINEMENT</h4><div class="refinement-note">Not counted as scope change - same epic, better understanding of work</div>`;
+    sc.storyBreakdownChanges.forEach(e=>{
+      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-count">${e.was}→${e.now} stories (+${e.delta})</span></div>`;
+    });
+    bodyHTML+=`</div>`;
+  }
+  bodyHTML+=`<div class="scope-section net-impact"><h4>📈 NET IMPACT</h4><p>Baseline: ${m.baselineEpics} epics<br>Added: +${sc.addedEpics.length} epics<br>Moved: -${sc.movedToReebit.length} epic (to Reenbit)<br>Current: ${m.currentEpics} epics<br><strong>Change: +${m.netChange} epics (+${m.percentChange.toFixed(1)}% scope growth)</strong></p></div>`;
+  document.getElementById('scopeBody').innerHTML=bodyHTML;
+}
+
+function renderComparisonCards(){
+  // Solo mostrar si hay semana previa
+  if(currentWeek==='W11-2026'){
+    document.getElementById('comparisonPanel').style.display='none';
+    return;
+  }
+  
+  // Obtener semana previa (siempre W11 por ahora, pero generalizable)
+  const weekNum=parseInt(currentWeek.match(/W(\d+)/)[1]);
+  const year=currentWeek.match(/(\d{4})/)[1];
+  const prevWeekId=`W${weekNum-1}-${year}`;
+  const prev=WEEKS[prevWeekId];
+  
+  if(!prev){
+    document.getElementById('comparisonPanel').style.display='none';
+    return;
+  }
+  
+  document.getElementById('comparisonPanel').style.display='block';
+  document.getElementById('comparisonTitle').textContent=`📊 Week-over-Week Comparison (${currentWeek} vs ${prevWeekId})`;
+  
+  // Calcular métricas
+  const progressDelta=D.summary.overallPercent-prev.summary.overallPercent;
+  const throughput=D.summary.totalDone-prev.summary.totalDone;
+  
+  // Contar epics cerrados esta semana
+  const prevClosedCount=prev.epics.filter(e=>e.epicStatus==='CLOSED').length;
+  const currClosedCount=D.epics.filter(e=>e.epicStatus==='CLOSED').length;
+  const epicsClosed=currClosedCount-prevClosedCount;
+  
+  // Renderizar cards
+  let html='';
+  
+  // Card 1: Progress
+  html+=`<div class="comp-card">
+    <div class="comp-card-label">Progress</div>
+    <div class="comp-card-change">
+      <div class="comp-prev">${prev.summary.overallPercent}%</div>
+      <div class="comp-arrow">↓</div>
+      <div class="comp-current">${D.summary.overallPercent}%</div>
+    </div>
+    <div class="comp-delta ${progressDelta>0?'positive':progressDelta<0?'negative':'neutral'}">
+      ${progressDelta>0?'+':''}${progressDelta}pp ${progressDelta>0?'↑':progressDelta<0?'↓':''}
+    </div>
+  </div>`;
+  
+  // Card 2: Throughput
+  html+=`<div class="comp-card">
+    <div class="comp-card-label">Throughput</div>
+    <div class="comp-card-change">
+      <div class="comp-current">${throughput}</div>
+      <div class="comp-metric">stories completed</div>
+    </div>
+    <div class="comp-delta ${throughput>0?'positive':throughput<0?'negative':'neutral'}">
+      ${throughput>0?'+':''}${throughput} ${throughput>0?'↑':throughput<0?'↓':''} vs last week
+    </div>
+  </div>`;
+  
+  // Card 3: Epics Closed
+  html+=`<div class="comp-card">
+    <div class="comp-card-label">Epics Closed</div>
+    <div class="comp-card-change">
+      <div class="comp-current">${epicsClosed}</div>
+      <div class="comp-metric">${epicsClosed===1?'epic':'epics'} this week</div>
+    </div>
+    <div class="comp-delta ${epicsClosed>0?'positive':epicsClosed<0?'negative':'neutral'}">
+      ${epicsClosed>0?'+':''}${epicsClosed} ${epicsClosed>0?'↑':epicsClosed<0?'↓':''} vs last week
+    </div>
+  </div>`;
+  
+  document.getElementById('comparisonCards').innerHTML=html;
+}
+
 function renderCards(){
-  const s=D.summary, pct=s.overallPercent;
-  const circ=2*Math.PI*44; // r=44
+  const s=D.summary,pct=s.overallPercent;
+  const circ=2*Math.PI*44;
   const off=circ*(1-pct/100);
   document.getElementById('summaryCards').innerHTML=
     '<div class="card"><div class="circ-wrap"><svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="44"/><circle class="circ-fg" cx="50" cy="50" r="44" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><div class="circ-pct">'+pct+'%</div></div><div class="card-lbl">Overall Progress</div></div>'+
@@ -283,14 +434,13 @@ function renderCards(){
     '<div class="card"><div class="card-val v-todo">'+s.totalTodo+'</div><div class="card-lbl">To Do</div></div>';
 }
 
-/* ===== FILTER OPTIONS ===== */
 function initFilter(){
   const sel=document.getElementById('sf');
+  sel.innerHTML='<option value="ALL">All Statuses</option>';
   const present=new Set(D.epics.map(e=>e.epicStatus));
   ORDER.forEach(s=>{if(present.has(s)){const o=document.createElement('option');o.value=s;o.textContent=LABELS[s]||s;sel.appendChild(o)}});
 }
 
-/* ===== CHART ===== */
 function renderChart(f){
   const g=grouped(f);gid=0;
   let h='';
@@ -321,7 +471,6 @@ function renderChart(f){
   document.getElementById('chart').innerHTML=h;
 }
 
-/* ===== DETAILS ===== */
 function renderDetails(f){
   const g=grouped(f);
   let h='';
@@ -363,16 +512,32 @@ function renderDetails(f){
   document.getElementById('details').innerHTML=h;
 }
 
-/* ===== RENDER ===== */
 function render(){
   const f=document.getElementById('sf').value;
   renderChart(f);
   renderDetails(f);
 }
 
+function loadWeek(weekId){
+  currentWeek=weekId;
+  D=WEEKS[weekId];
+  updateMetaBox();
+  renderCards();
+  renderComparisonCards();
+  renderScopeChanges();
+  initFilter();
+  render();
+}
+
+updateMetaBox();
 renderCards();
+renderComparisonCards();
+renderScopeChanges();
 initFilter();
 render();
+
+document.getElementById('weekSelect').addEventListener('change',(e)=>{loadWeek(e.target.value)});
+document.getElementById('sf').addEventListener('change',render);
 </script>
 </body>
 </html>
