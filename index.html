@@ -1,543 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Launch Loyalty — Epic Progress Dashboard</title>
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --done:#22c55e;--inprog:#eab308;--todo:#cbd5e1;
-  --bg:#f1f5f9;--card:#fff;--text:#0f172a;--muted:#64748b;
-  --closed:#059669;--readydeploy:#0d9488;--indev:#2563eb;
-  --readydev:#7c3aed;--design:#d97706;--discover:#db2777;
-  --backlog:#64748b;--blocked:#dc2626;
-}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:0;margin:0}
-.page{max-width:1440px;margin:0 auto;padding:28px 32px 48px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Loyalty - Epic Progress Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #151922;
+            --bg-card-hover: #1a1f2e;
+            --border: #252b3a;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0ac;
+            --text-muted: #5f6572;
+            --accent-primary: #4da6ff;
+            --accent-success: #00d4aa;
+            --accent-warning: #ffb84d;
+            --accent-danger: #ff6b6b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
 
-/* Header */
-.header{margin-bottom:28px}
-.header h1{font-size:30px;font-weight:800;letter-spacing:-.3px;margin-bottom:16px}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Week Selector Prominente */
-.week-selector-prominent{background:var(--card);padding:16px 20px;border-radius:10px;margin-bottom:16px;box-shadow:0 2px 4px rgba(0,0,0,.08)}
-.week-selector-prominent label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
-.week-selector-prominent select{font-size:16px;font-weight:700;padding:10px 16px;width:100%;max-width:400px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer}
-.baseline-indicator{display:block;font-size:13px;color:var(--muted);margin-top:6px}
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
 
-/* Meta Box */
-.meta-box{background:#f8fafc;padding:12px 16px;border-radius:8px;border:1px solid #e2e8f0}
-.meta-line{font-size:14px;margin:4px 0}
-.meta-line strong{font-weight:600;color:var(--text)}
-.delta-line{margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0}
-.delta{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:600;margin-right:8px}
-.delta.up{background:#dcfce7;color:#15803d}
-.delta.down{background:#fee2e2;color:#991b1b}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-/* Cards */
-.cards{display:grid;grid-template-columns:auto repeat(3,1fr);gap:16px;margin-bottom:28px}
-.card{background:var(--card);border-radius:14px;padding:22px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.card-val{font-size:38px;font-weight:800;line-height:1}
-.card-lbl{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-top:6px}
-.card-val.v-done{color:var(--done)}.card-val.v-ip{color:var(--inprog)}.card-val.v-todo{color:var(--backlog)}
+        /* Header */
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-/* Comparison Cards */
-.comparison-panel{background:var(--card);border-radius:14px;padding:20px 24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
-.comparison-panel h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text)}
-.comparison-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.comp-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;text-align:center}
-.comp-card-label{font-size:12px;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
-.comp-card-change{display:flex;flex-direction:column;align-items:center;gap:4px;margin:12px 0}
-.comp-prev{font-size:16px;font-weight:600;color:var(--muted)}
-.comp-arrow{font-size:20px;color:var(--muted)}
-.comp-current{font-size:28px;font-weight:800;color:var(--text)}
-.comp-metric{font-size:11px;color:var(--muted);margin-top:4px}
-.comp-delta{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:700;margin-top:8px}
-.comp-delta.positive{background:#dcfce7;color:#15803d}
-.comp-delta.negative{background:#fee2e2;color:#991b1b}
-.comp-delta.neutral{background:#f1f5f9;color:var(--muted)}
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #4da6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-/* Circular progress */
-.circ-wrap{position:relative;width:110px;height:110px;margin-bottom:6px}
-.circ-wrap svg{width:110px;height:110px;transform:rotate(-90deg)}
-.circ-bg{fill:none;stroke:#e2e8f0;stroke-width:10}
-.circ-fg{fill:none;stroke:var(--indev);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)}
-.circ-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:var(--indev)}
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
 
-/* Scope Changes Panel */
-.scope-panel{background:var(--card);border-radius:14px;padding:20px 24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
-.scope-panel.collapsed .scope-body{display:none}
-.scope-header{cursor:pointer;user-select:none}
-.scope-header h2{font-size:20px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.scope-summary{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
-.scope-metric{font-size:13px;font-weight:600;padding:6px 12px;background:#f1f5f9;border-radius:6px;color:var(--text)}
-.scope-toggle{margin-top:12px;padding:8px 20px;background:var(--indev);color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px;transition:background .2s}
-.scope-toggle:hover{background:#1d4ed8}
-.scope-body{margin-top:20px;padding-top:20px;border-top:2px solid #f1f5f9}
-.scope-section{margin-bottom:24px}
-.scope-section:last-child{margin-bottom:0}
-.scope-section h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:6px}
-.scope-item{padding:8px 12px;background:#fafbfc;border-radius:6px;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.scope-item a{font-weight:700;color:var(--indev);text-decoration:none;font-size:13px}
-.scope-item a:hover{text-decoration:underline}
-.scope-item-name{font-size:13px;color:var(--text);flex:1;min-width:200px}
-.scope-item-count{font-size:12px;font-weight:600;color:var(--muted);margin-left:auto}
-.scope-item-reason{font-size:12px;color:var(--muted);font-style:italic}
-.net-impact{background:#f8fafc;padding:16px;border-radius:8px;border:2px solid #e2e8f0}
-.net-impact h4{margin-bottom:8px}
-.net-impact p{font-size:14px;line-height:1.6;color:var(--text)}
-.refinement-note{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:10px;padding:8px 12px;background:#fef3c7;border-radius:6px;border-left:3px solid #d97706}
+        /* Week Selector */
+        .week-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
 
-/* Filter + legend row */
-.controls{display:flex;align-items:center;gap:24px;margin-bottom:22px;flex-wrap:wrap}
-.filter-grp{display:flex;align-items:center;gap:8px}
-.filter-grp label{font-weight:600;font-size:14px}
-.filter-grp select{padding:7px 12px;border-radius:8px;border:1px solid #cbd5e1;font-size:14px;background:#fff;cursor:pointer}
-.legend{display:flex;gap:22px;font-size:15px;font-weight:500}
-.legend-item{display:flex;align-items:center;gap:8px}
-.legend-sw{width:22px;height:22px;border-radius:5px;flex-shrink:0}
+        .week-selector label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
 
-/* Panels */
-.panel{background:var(--card);border-radius:14px;padding:24px 28px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);margin-bottom:28px}
-.panel>h2{font-size:20px;font-weight:700;margin-bottom:18px}
+        select {
+            flex: 1;
+            max-width: 300px;
+            padding: 0.75rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-/* Group header */
-.gh{display:flex;align-items:center;gap:10px;padding:11px 8px;margin-top:14px;border-radius:8px;background:#f8fafc;cursor:pointer;user-select:none;transition:background .15s}
-.gh:first-child{margin-top:0}
-.gh:hover{background:#f1f5f9}
-.gh h3{font-size:14px;font-weight:700}
-.gh-stats{font-size:12px;color:var(--muted);font-weight:500}
-.gh-arrow{margin-left:auto;font-size:11px;color:var(--muted);transition:transform .2s}
-.gh-arrow.collapsed{transform:rotate(-90deg)}
-.g-body{overflow:hidden;transition:max-height .35s ease}
-.g-body.collapsed{max-height:0!important}
+        select:hover {
+            border-color: var(--accent-primary);
+        }
 
-/* Badges */
-.badge{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;line-height:1.6}
-.b-CLOSED{background:#d1fae5;color:#065f46}
-.b-READY_DEPLOYMENT{background:#ccfbf1;color:#0f766e}
-.b-IN-DEVELOPMENT{background:#dbeafe;color:#1d4ed8}
-.b-READY_TO_DEVELOP{background:#ede9fe;color:#6d28d9}
-.b-DESIGN{background:#fef3c7;color:#92400e}
-.b-DISCOVER{background:#fce7f3;color:#9d174d}
-.b-Backlog{background:#f1f5f9;color:#475569}
-.b-BLOCKED{background:#fee2e2;color:#991b1b}
+        select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.1);
+        }
 
-/* Border colors */
-.bl-CLOSED{border-left-color:var(--closed)!important}
-.bl-READY_DEPLOYMENT{border-left-color:var(--readydeploy)!important}
-.bl-IN-DEVELOPMENT{border-left-color:var(--indev)!important}
-.bl-READY_TO_DEVELOP{border-left-color:var(--readydev)!important}
-.bl-DESIGN{border-left-color:var(--design)!important}
-.bl-DISCOVER{border-left-color:var(--discover)!important}
-.bl-Backlog{border-left-color:var(--backlog)!important}
-.bl-BLOCKED{border-left-color:var(--blocked)!important}
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-/* Chart bar rows */
-.br{display:grid;grid-template-columns:370px 1fr 52px;align-items:center;gap:10px;padding:5px 0 5px 10px;border-bottom:1px solid #f1f5f9;border-left:3px solid transparent;transition:background .1s}
-.br:hover{background:#fafbfc}
-.br-lbl{display:flex;align-items:center;gap:7px;font-size:13px;line-height:1.35;min-width:0}
-.br-lbl a{color:var(--indev);text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap;flex-shrink:0}
-.br-lbl a:hover{text-decoration:underline}
-.br-name{white-space:normal;word-break:break-word}
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
 
-/* Stacked bar track */
-.bt{height:26px;background:#eef2f6;border-radius:5px;display:flex;overflow:visible;position:relative}
-.bs{height:100%;display:flex;align-items:center;justify-content:center;border-radius:0;position:relative;overflow:visible}
-.bt .bs:first-child{border-radius:5px 0 0 5px}
-.bt .bs:last-child{border-radius:0 5px 5px 0}
-.bt .bs:only-child{border-radius:5px}
-.bs-d{background:var(--done)}.bs-i{background:var(--inprog)}.bs-t{background:var(--todo)}
-.bs-lbl{font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap;pointer-events:none;line-height:1}
-.br-pct{font-size:13px;font-weight:700;text-align:right;white-space:nowrap;color:var(--text)}
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
 
-/* Details section */
-.details-scroll{max-height:720px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#cbd5e1 #f1f5f9}
-.details-scroll::-webkit-scrollbar{width:6px}
-.details-scroll::-webkit-scrollbar-track{background:#f1f5f9;border-radius:3px}
-.details-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-.dc{padding:11px 0 11px 10px;border-bottom:1px solid #f1f5f9;border-left:3px solid transparent}
-.dc:hover{background:#fafbfc}
-.dc-top{display:flex;align-items:center;gap:9px;margin-bottom:7px;flex-wrap:wrap}
-.dc-top a{font-weight:700;color:var(--indev);text-decoration:none;font-size:14px}
-.dc-top a:hover{text-decoration:underline}
-.dc-name{font-size:13.5px;font-weight:500}
-.dc-prog{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.dc-bar{width:320px;max-width:100%;height:20px;background:#eef2f6;border-radius:5px;display:flex;overflow:visible;flex-shrink:0}
-.dc-bar .bs:first-child{border-radius:5px 0 0 5px}
-.dc-bar .bs:last-child{border-radius:0 5px 5px 0}
-.dc-bar .bs:only-child{border-radius:5px}
-.dc-pct{font-size:14px;font-weight:700;min-width:40px}
-.dc-counts{font-size:13px;color:var(--muted)}
-.dc-counts span{margin-right:10px}
-.dc-counts .cd{color:#16a34a;font-weight:600}
-.dc-counts .ci{color:#ca8a04;font-weight:600}
-.dc-counts .ct{color:#94a3b8;font-weight:600}
+        .metric-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
 
-@media(max-width:1000px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .br{grid-template-columns:220px 1fr 46px}
-  .comparison-cards{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .page{padding:16px}
-  .cards{grid-template-columns:1fr 1fr}
-  .br{grid-template-columns:1fr;gap:4px}
-  .br-lbl{grid-column:1/-1}
-  .week-selector-prominent select{max-width:100%}
-  .comparison-cards{grid-template-columns:1fr}
-}
-</style>
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .metric-delta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            font-family: 'IBM Plex Mono', monospace;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .metric-delta.positive {
+            color: var(--accent-success);
+            background: rgba(0, 212, 170, 0.1);
+        }
+
+        .metric-delta.negative {
+            color: var(--accent-danger);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .metric-delta.neutral {
+            color: var(--text-muted);
+            background: rgba(95, 101, 114, 0.1);
+        }
+
+        /* Chart Containers */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-wrapper.tall {
+            height: 400px;
+        }
+
+        /* Distribution Grid */
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .distribution-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .metric-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+        .metric-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
 </head>
 <body>
-<div class="page">
+    <div class="container">
+        <header>
+            <h1>Launch Loyalty</h1>
+            <div class="subtitle">Epic Progress Report • Wellfit</div>
+        </header>
 
-<div class="header">
-  <h1>Launch Loyalty — Epic Progress</h1>
-  
-  <div class="week-selector-prominent">
-    <label for="weekSelect">Reporting Week</label>
-    <select id="weekSelect">
-      <option value="W11-2026">W11, 2026 — March 15</option>
-      <option value="W12-2026" selected>W12, 2026 — March 19</option>
-    </select>
-    <span class="baseline-indicator">Compare to: W11 (baseline)</span>
-  </div>
-  
-  <div class="meta-box" id="metaBox"></div>
-</div>
+        <div class="week-selector">
+            <label for="weekSelect">Report Week:</label>
+            <select id="weekSelect">
+                <option value="">Loading...</option>
+            </select>
+        </div>
 
-<div class="cards" id="summaryCards"></div>
-
-<!-- COMPARISON CARDS -->
-<div class="comparison-panel" id="comparisonPanel" style="display:none">
-  <h2 id="comparisonTitle">📊 Week-over-Week Comparison</h2>
-  <div class="comparison-cards" id="comparisonCards"></div>
-</div>
-
-<div class="scope-panel collapsed" id="scopePanel" style="display:none">
-  <div class="scope-header" onclick="toggleScope()">
-    <h2 id="scopeTitle">📊 Scope Changes</h2>
-    <div class="scope-summary" id="scopeSummary"></div>
-    <button class="scope-toggle" id="scopeToggleBtn">View Details ▼</button>
-  </div>
-  <div class="scope-body" id="scopeBody"></div>
-</div>
-
-<div class="controls">
-  <div class="filter-grp">
-    <label for="sf">Filter by Status:</label>
-    <select id="sf"><option value="ALL">All Statuses</option></select>
-  </div>
-  <div class="legend">
-    <div class="legend-item"><div class="legend-sw" style="background:var(--done)"></div>Done</div>
-    <div class="legend-item"><div class="legend-sw" style="background:var(--inprog)"></div>In Progress</div>
-    <div class="legend-item"><div class="legend-sw" style="background:var(--todo)"></div>To Do</div>
-  </div>
-</div>
-
-<div class="panel">
-  <h2>Progress by Epic</h2>
-  <div id="chart"></div>
-</div>
-
-<div class="panel">
-  <h2>Epic Details</h2>
-  <div class="details-scroll" id="details"></div>
-</div>
-
-</div>
-
-<script>
-const WEEKS={'W11-2026':{date:'March 15, 2026',totalEpics:40,totalStories:157,excludedWNI:16,excludedReebit:5,summary:{totalDone:31,totalInProgress:20,totalTodo:106,overallPercent:20},epics:[{key:"LL-399",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-166",name:"Management of the Doctors inside of Marketplace",epicStatus:"CLOSED",total:9,done:9,inProgress:0,todo:0,percentComplete:100},{key:"LL-318",name:"Member Email Enhancements for Migration",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"PMP - Create Plan Details Section",epicStatus:"READY DEPLOYMENT",total:11,done:9,inProgress:0,todo:2,percentComplete:82},{key:"LL-338",name:"LL Dynamic Contact Info Displayed/Used",epicStatus:"READY DEPLOYMENT",total:5,done:4,inProgress:1,todo:0,percentComplete:80},{key:"LL-373",name:"Reenbit Custom Websites - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:1,todo:0,percentComplete:50},{key:"LL-234",name:"PMP and Purchase Portals - Plan to Text in Practice",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-348",name:"Additional Benefits Configuration and Member Portal",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},{key:"LL-65",name:"Marketplace - MVP - Subscription Purchases (P1)",epicStatus:"IN-DEVELOPMENT",total:7,done:3,inProgress:1,todo:3,percentComplete:43},{key:"LL-307",name:"LL Custom Website - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-393",name:"Marketplace - MVP - CSR Widget Config Set-up",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:0,todo:1,percentComplete:50},{key:"LL-111",name:"Market Place - MVP - Member Portal Support",epicStatus:"IN-DEVELOPMENT",total:13,done:7,inProgress:1,todo:5,percentComplete:54},{key:"LL-122",name:"Market Place - MVP - CSR Pricing Config Set-up",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-273",name:"Reenbit Custom Websites",epicStatus:"IN-DEVELOPMENT",total:3,done:2,inProgress:1,todo:0,percentComplete:67},{key:"LL-343",name:"Data Services - Daily Data Pull - Additional Benefit",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:1,todo:1,percentComplete:0},{key:"LL-193",name:"PMP Advanced Member Search",epicStatus:"IN-DEVELOPMENT",total:4,done:1,inProgress:0,todo:3,percentComplete:25},{key:"LL-191",name:"Phase 1 - Q1 Functional Testing for Marketplace",epicStatus:"IN-DEVELOPMENT",total:6,done:3,inProgress:2,todo:1,percentComplete:50},{key:"LL-472",name:"Reenbit Work Placeholder",epicStatus:"IN-DEVELOPMENT",total:4,done:2,inProgress:2,todo:0,percentComplete:50},{key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:0,todo:12,percentComplete:0},{key:"LL-49",name:"Plan Design Changes to Intake in Plan Rules Set Up",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-54",name:"Plan design details to Dynamically drive Benefit summaries",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-78",name:"Plans Marketplace - Subscription Payment CRM Changes",epicStatus:"DESIGN",total:4,done:0,inProgress:0,todo:4,percentComplete:0},{key:"LL-167",name:"PMP - Advanced Search beyond Practice",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-519",name:"PMP Plan Details Post MVP",epicStatus:"Backlog",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-532",name:"PMP Updates Pending Other Teams",epicStatus:"Backlog",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-14",name:"Provider Portal - honor max number of people",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-301",name:"Purchase Portal/Smile Health - Display Max People",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-309",name:"Purchase Widget - Allow a Style Profile",epicStatus:"DESIGN",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"DISCOVER",total:2,done:0,inProgress:1,todo:1,percentComplete:0}]},'W12-2026':{date:'March 19, 2026',totalEpics:43,totalStories:178,excludedWNI:16,excludedReebit:6,summary:{totalDone:54,totalInProgress:48,totalTodo:76,overallPercent:30},epics:[{key:"LL-166",name:"Management of the Doctors inside of Marketplace",epicStatus:"CLOSED",total:9,done:9,inProgress:0,todo:0,percentComplete:100},{key:"LL-318",name:"Member Email Enhancements for Migration",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"CLOSED",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-393",name:"Marketplace - MVP - CSR Widget Config Set-up",epicStatus:"CLOSED",total:2,done:2,inProgress:0,todo:0,percentComplete:100},{key:"LL-399",name:"PMP - Create Plan Details Section",epicStatus:"READY DEPLOYMENT",total:11,done:9,inProgress:2,todo:0,percentComplete:82},{key:"LL-338",name:"LL Dynamic Contact Info Displayed/Used",epicStatus:"READY DEPLOYMENT",total:5,done:5,inProgress:0,todo:0,percentComplete:100},{key:"LL-273",name:"Reenbit Custom Websites",epicStatus:"READY DEPLOYMENT",total:3,done:3,inProgress:0,todo:0,percentComplete:100},{key:"LL-65",name:"Marketplace - MVP - Subscription Purchases (P1)",epicStatus:"IN-DEVELOPMENT",total:7,done:3,inProgress:2,todo:2,percentComplete:43},{key:"LL-111",name:"Market Place - MVP - Member Portal Support",epicStatus:"IN-DEVELOPMENT",total:13,done:7,inProgress:3,todo:3,percentComplete:54},{key:"LL-122",name:"Market Place - MVP - CSR Pricing Config",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-191",name:"Phase 1 - Q1 Functional Testing",epicStatus:"IN-DEVELOPMENT",total:6,done:3,inProgress:2,todo:1,percentComplete:50},{key:"LL-193",name:"PMP Advanced Member Search",epicStatus:"IN-DEVELOPMENT",total:4,done:1,inProgress:2,todo:1,percentComplete:25},{key:"LL-234",name:"PMP and Purchase Portals - Plan to Text in Practice",epicStatus:"IN-DEVELOPMENT",total:4,done:0,inProgress:3,todo:1,percentComplete:0},{key:"LL-307",name:"LL Custom Website - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-343",name:"Data Services - Daily Data Pull",epicStatus:"IN-DEVELOPMENT",total:2,done:0,inProgress:2,todo:0,percentComplete:0},{key:"LL-348",name:"Additional Benefits Configuration and Member Portal",epicStatus:"IN-DEVELOPMENT",total:5,done:0,inProgress:4,todo:1,percentComplete:0},{key:"LL-373",name:"Reenbit Custom Websites - Landing Page Funnel",epicStatus:"IN-DEVELOPMENT",total:2,done:1,inProgress:1,todo:0,percentComplete:50},{key:"LL-575",name:"Marketplace Dental Plan Details - Copays",epicStatus:"IN-DEVELOPMENT",total:3,done:0,inProgress:2,todo:1,percentComplete:0},{key:"LL-601",name:"Member Portal - Manage Subscription MVP",epicStatus:"IN-DEVELOPMENT",total:8,done:0,inProgress:6,todo:2,percentComplete:0},{key:"LL-598",name:"Plans Marketplace - Subscription Payment CRM Changes",epicStatus:"IN-DEVELOPMENT",total:4,done:0,inProgress:3,todo:1,percentComplete:0},{key:"LL-14",name:"Provider Portal - honor max number of people",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-49",name:"Plan Design Changes to Intake in Plan Rules",epicStatus:"READY TO DEVELOP",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-54",name:"Plan design details to Dynamically drive Benefit summaries",epicStatus:"READY TO DEVELOP",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-167",name:"PMP - Advanced Search beyond Practice",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-309",name:"Purchase Widget - Allow a Style Profile",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-618",name:"Phase 3 - Q2 Functional Testing for Marketplace",epicStatus:"READY TO DEVELOP",total:10,done:0,inProgress:0,todo:10,percentComplete:0},{key:"LL-78",name:"Plans Marketplace - Plan Setup for Payment Options",epicStatus:"DESIGN",total:4,done:0,inProgress:2,todo:2,percentComplete:0},{key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:4,todo:8,percentComplete:0},{key:"LL-187",name:"PMP - Plan Details Section Post-MVP Refinements",epicStatus:"DESIGN",total:5,done:0,inProgress:2,todo:3,percentComplete:0},{key:"LL-228",name:"Plans Marketplace - CSP Widget Customization",epicStatus:"DESIGN",total:3,done:0,inProgress:2,todo:1,percentComplete:0},{key:"LL-519",name:"PMP Plan Details Post MVP",epicStatus:"DISCOVER",total:1,done:0,inProgress:1,todo:0,percentComplete:0},{key:"LL-532",name:"PMP Updates Pending Other Teams",epicStatus:"DISCOVER",total:2,done:0,inProgress:1,todo:1,percentComplete:0},{key:"LL-301",name:"Purchase Portal/Smile Health - Display Max People",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0}],scopeChanges:{addedEpics:[{key:'LL-575',name:'Marketplace Dental Plan Details - Copays'},{key:'LL-601',name:'Member Portal - Manage Subscription MVP'},{key:'LL-618',name:'Phase 3 - Q2 Functional Testing for Marketplace'}],movedToReebit:[{key:'LL-472',name:'Reenbit Work Placeholder'}],storyBreakdownChanges:[{key:'LL-234',name:'PMP and Purchase Portals - Plan to Text in Practice',was:1,now:4,delta:3},{key:'LL-348',name:'Additional Benefits Configuration and Member Portal',was:2,now:5,delta:3}],metrics:{baselineEpics:40,currentEpics:43,added:3,moved:1,netChange:2,percentChange:5.0}}}};
-
-const ORDER=['CLOSED','READY DEPLOYMENT','IN-DEVELOPMENT','READY TO DEVELOP','DESIGN','DISCOVER','Backlog','BLOCKED'];
-const LABELS={'CLOSED':'Closed','READY DEPLOYMENT':'Ready Deployment','IN-DEVELOPMENT':'In Development','READY TO DEVELOP':'Ready to Develop','DESIGN':'Design','DISCOVER':'Discover','Backlog':'Backlog','BLOCKED':'Blocked'};
-function bCls(s){return'b-'+s.replace(/ /g,'_')}
-function blCls(s){return'bl-'+s.replace(/ /g,'_')}
-const MIN_W=30;
-
-let currentWeek='W12-2026';
-let D=WEEKS[currentWeek];
-
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function jira(k){return'https://wellfit.atlassian.net/browse/'+k}
-function badge(s){return'<span class="badge '+bCls(s)+'">'+(LABELS[s]||s)+'</span>'}
-
-function segs(e,trackCls){
-  const parts=[];
-  if(e.done>0)parts.push({n:e.done,c:'bs-d'});
-  if(e.inProgress>0)parts.push({n:e.inProgress,c:'bs-i'});
-  if(e.todo>0)parts.push({n:e.todo,c:'bs-t'});
-  if(!parts.length)return'<div class="'+trackCls+'"><div class="bs bs-t" style="flex:1;min-width:'+MIN_W+'px"></div></div>';
-  let h='<div class="'+trackCls+'">';
-  parts.forEach(p=>{h+='<div class="bs '+p.c+'" style="flex:'+p.n+';min-width:'+MIN_W+'px"><span class="bs-lbl">'+p.n+'</span></div>'});
-  return h+'</div>';
-}
-
-function grouped(f){
-  const g={};ORDER.forEach(s=>g[s]=[]);
-  D.epics.forEach(e=>{if(f!=='ALL'&&e.epicStatus!==f)return;if(g[e.epicStatus])g[e.epicStatus].push(e)});
-  Object.values(g).forEach(a=>a.sort((x,y)=>y.percentComplete-x.percentComplete||y.total-x.total));
-  return g;
-}
-
-let gid=0;
-function toggle(id){
-  document.getElementById(id).classList.toggle('collapsed');
-  document.getElementById(id+'-a').classList.toggle('collapsed');
-}
-
-function toggleScope(){
-  const panel=document.getElementById('scopePanel');
-  const btn=document.getElementById('scopeToggleBtn');
-  panel.classList.toggle('collapsed');
-  btn.textContent=panel.classList.contains('collapsed')?'View Details ▼':'Collapse ▲';
-}
-
-function updateMetaBox(){
-  const prev=currentWeek==='W11-2026'?null:WEEKS['W11-2026'];
-  let html=`<div class="meta-line"><strong>Active Scope:</strong> ${D.totalEpics} Epics, ${D.totalStories} Stories</div>`;
-  html+=`<div class="meta-line"><strong>Excluded:</strong> ${D.excludedWNI} WNI epics, ${D.excludedReebit} Reenbit epics</div>`;
-  if(prev){
-    const epicDelta=D.totalEpics-prev.totalEpics;
-    const storyDelta=D.totalStories-prev.totalStories;
-    html+=`<div class="meta-line delta-line">`;
-    html+=`<span class="delta ${epicDelta>=0?'up':'down'}">${epicDelta>=0?'+':''}${epicDelta} epics</span>`;
-    html+=`<span class="delta ${storyDelta>=0?'up':'down'}">${storyDelta>=0?'+':''}${storyDelta} stories</span>`;
-    html+=`vs W11</div>`;
-  }
-  document.getElementById('metaBox').innerHTML=html;
-}
-
-function renderScopeChanges(){
-  const sc=D.scopeChanges;
-  if(!sc){
-    document.getElementById('scopePanel').style.display='none';
-    return;
-  }
-  document.getElementById('scopePanel').style.display='block';
-  document.getElementById('scopeTitle').textContent=`📊 Scope Changes (${currentWeek} vs W11)`;
-  const m=sc.metrics;
-  let summaryHTML=`<span class="scope-metric">+${m.percentChange.toFixed(1)}% Epic Growth (${m.baselineEpics} → ${m.currentEpics})</span>`;
-  summaryHTML+=`<span class="scope-metric">+${sc.addedEpics.length} New Epics</span>`;
-  if(sc.movedToReebit.length>0)summaryHTML+=`<span class="scope-metric">${sc.movedToReebit.length} Reclassified</span>`;
-  document.getElementById('scopeSummary').innerHTML=summaryHTML;
-  let bodyHTML='';
-  if(sc.addedEpics.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>✅ NEW EPICS ADDED (${sc.addedEpics.length})</h4>`;
-    sc.addedEpics.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  if(sc.movedToReebit.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>⚠️ SCOPE MOVEMENTS</h4>`;
-    sc.movedToReebit.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-reason">→ Moved to Reenbit vendor scope</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  if(sc.storyBreakdownChanges.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>ℹ️ STORY REFINEMENT</h4><div class="refinement-note">Not counted as scope change - same epic, better understanding of work</div>`;
-    sc.storyBreakdownChanges.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-count">${e.was}→${e.now} stories (+${e.delta})</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  bodyHTML+=`<div class="scope-section net-impact"><h4>📈 NET IMPACT</h4><p>Baseline: ${m.baselineEpics} epics<br>Added: +${sc.addedEpics.length} epics<br>Moved: -${sc.movedToReebit.length} epic (to Reenbit)<br>Current: ${m.currentEpics} epics<br><strong>Change: +${m.netChange} epics (+${m.percentChange.toFixed(1)}% scope growth)</strong></p></div>`;
-  document.getElementById('scopeBody').innerHTML=bodyHTML;
-}
-
-function renderComparisonCards(){
-  // Solo mostrar si hay semana previa
-  if(currentWeek==='W11-2026'){
-    document.getElementById('comparisonPanel').style.display='none';
-    return;
-  }
-  
-  // Obtener semana previa (siempre W11 por ahora, pero generalizable)
-  const weekNum=parseInt(currentWeek.match(/W(\d+)/)[1]);
-  const year=currentWeek.match(/(\d{4})/)[1];
-  const prevWeekId=`W${weekNum-1}-${year}`;
-  const prev=WEEKS[prevWeekId];
-  
-  if(!prev){
-    document.getElementById('comparisonPanel').style.display='none';
-    return;
-  }
-  
-  document.getElementById('comparisonPanel').style.display='block';
-  document.getElementById('comparisonTitle').textContent=`📊 Week-over-Week Comparison (${currentWeek} vs ${prevWeekId})`;
-  
-  // Calcular métricas
-  const progressDelta=D.summary.overallPercent-prev.summary.overallPercent;
-  const throughput=D.summary.totalDone-prev.summary.totalDone;
-  
-  // Contar epics cerrados esta semana
-  const prevClosedCount=prev.epics.filter(e=>e.epicStatus==='CLOSED').length;
-  const currClosedCount=D.epics.filter(e=>e.epicStatus==='CLOSED').length;
-  const epicsClosed=currClosedCount-prevClosedCount;
-  
-  // Renderizar cards
-  let html='';
-  
-  // Card 1: Progress
-  html+=`<div class="comp-card">
-    <div class="comp-card-label">Progress</div>
-    <div class="comp-card-change">
-      <div class="comp-prev">${prev.summary.overallPercent}%</div>
-      <div class="comp-arrow">↓</div>
-      <div class="comp-current">${D.summary.overallPercent}%</div>
+        <div id="content">
+            <div class="loading">Loading report data...</div>
+        </div>
     </div>
-    <div class="comp-delta ${progressDelta>0?'positive':progressDelta<0?'negative':'neutral'}">
-      ${progressDelta>0?'+':''}${progressDelta}pp ${progressDelta>0?'↑':progressDelta<0?'↓':''}
-    </div>
-  </div>`;
-  
-  // Card 2: Throughput
-  html+=`<div class="comp-card">
-    <div class="comp-card-label">Throughput</div>
-    <div class="comp-card-change">
-      <div class="comp-current">${throughput}</div>
-      <div class="comp-metric">stories completed</div>
-    </div>
-    <div class="comp-delta ${throughput>0?'positive':throughput<0?'negative':'neutral'}">
-      ${throughput>0?'+':''}${throughput} ${throughput>0?'↑':throughput<0?'↓':''} vs last week
-    </div>
-  </div>`;
-  
-  // Card 3: Epics Closed
-  html+=`<div class="comp-card">
-    <div class="comp-card-label">Epics Closed</div>
-    <div class="comp-card-change">
-      <div class="comp-current">${epicsClosed}</div>
-      <div class="comp-metric">${epicsClosed===1?'epic':'epics'} this week</div>
-    </div>
-    <div class="comp-delta ${epicsClosed>0?'positive':epicsClosed<0?'negative':'neutral'}">
-      ${epicsClosed>0?'+':''}${epicsClosed} ${epicsClosed>0?'↑':epicsClosed<0?'↓':''} vs last week
-    </div>
-  </div>`;
-  
-  document.getElementById('comparisonCards').innerHTML=html;
-}
 
-function renderCards(){
-  const s=D.summary,pct=s.overallPercent;
-  const circ=2*Math.PI*44;
-  const off=circ*(1-pct/100);
-  document.getElementById('summaryCards').innerHTML=
-    '<div class="card"><div class="circ-wrap"><svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="44"/><circle class="circ-fg" cx="50" cy="50" r="44" stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/></svg><div class="circ-pct">'+pct+'%</div></div><div class="card-lbl">Overall Progress</div></div>'+
-    '<div class="card"><div class="card-val v-done">'+s.totalDone+'</div><div class="card-lbl">Done</div></div>'+
-    '<div class="card"><div class="card-val v-ip">'+s.totalInProgress+'</div><div class="card-lbl">In Progress</div></div>'+
-    '<div class="card"><div class="card-val v-todo">'+s.totalTodo+'</div><div class="card-lbl">To Do</div></div>';
-}
+    <script>
+        // Chart.js defaults
+        Chart.defaults.color = '#9aa0ac';
+        Chart.defaults.font.family = "'Work Sans', sans-serif";
+        Chart.defaults.borderColor = '#252b3a';
 
-function initFilter(){
-  const sel=document.getElementById('sf');
-  sel.innerHTML='<option value="ALL">All Statuses</option>';
-  const present=new Set(D.epics.map(e=>e.epicStatus));
-  ORDER.forEach(s=>{if(present.has(s)){const o=document.createElement('option');o.value=s;o.textContent=LABELS[s]||s;sel.appendChild(o)}});
-}
+        let currentData = null;
+        let previousData = null;
+        let chartInstances = {};
 
-function renderChart(f){
-  const g=grouped(f);gid=0;
-  let h='';
-  ORDER.forEach(st=>{
-    const epics=g[st];if(!epics.length)return;
-    const td=epics.reduce((a,e)=>a+e.done,0);
-    const ti=epics.reduce((a,e)=>a+e.inProgress,0);
-    const tt=epics.reduce((a,e)=>a+e.todo,0);
-    const ts=td+ti+tt;
-    const pct=ts?Math.round(td/ts*100):0;
-    const id='cg'+(gid++);
-    h+='<div class="gh" onclick="toggle(\''+id+'\')">'
-      +badge(st)
-      +' <h3>'+(LABELS[st]||st)+'</h3>'
-      +' <span class="gh-stats">'+epics.length+' epics, '+ts+' stories, '+td+' done ('+pct+'%)</span>'
-      +'<span class="gh-arrow" id="'+id+'-a">&#9660;</span>'
-      +'</div>';
-    h+='<div class="g-body" id="'+id+'">';
-    epics.forEach(e=>{
-      h+='<div class="br '+blCls(e.epicStatus)+'">'
-        +'<div class="br-lbl"><a href="'+jira(e.key)+'" target="_blank" rel="noopener">'+e.key+'</a><span class="br-name">'+esc(e.name)+'</span></div>'
-        +segs(e,'bt')
-        +'<div class="br-pct">'+e.percentComplete+'%</div>'
-        +'</div>';
-    });
-    h+='</div>';
-  });
-  document.getElementById('chart').innerHTML=h;
-}
+        // Load manifest and populate week selector
+        async function loadManifest() {
+            try {
+                const response = await fetch('data/manifest.json');
+                const manifest = await response.json();
+                
+                const select = document.getElementById('weekSelect');
+                select.innerHTML = '';
+                
+                manifest.weeks.forEach(week => {
+                    const option = document.createElement('option');
+                    option.value = week.id;
+                    option.textContent = week.label;
+                    select.appendChild(option);
+                });
 
-function renderDetails(f){
-  const g=grouped(f);
-  let h='';
-  ORDER.forEach(st=>{
-    const epics=g[st];if(!epics.length)return;
-    const td=epics.reduce((a,e)=>a+e.done,0);
-    const ti=epics.reduce((a,e)=>a+e.inProgress,0);
-    const tt=epics.reduce((a,e)=>a+e.todo,0);
-    const ts=td+ti+tt;
-    const pct=ts?Math.round(td/ts*100):0;
-    const id='dg'+(gid++);
-    h+='<div class="gh" onclick="toggle(\''+id+'\')">'
-      +badge(st)
-      +' <h3>'+(LABELS[st]||st)+'</h3>'
-      +' <span class="gh-stats">'+epics.length+' epics, '+ts+' stories &middot; Done: '+td+' | In Progress: '+ti+' | Todo: '+tt+' ('+pct+'%)</span>'
-      +'<span class="gh-arrow" id="'+id+'-a">&#9660;</span>'
-      +'</div>';
-    h+='<div class="g-body" id="'+id+'">';
-    epics.forEach(e=>{
-      h+='<div class="dc '+blCls(e.epicStatus)+'">'
-        +'<div class="dc-top">'
-          +'<a href="'+jira(e.key)+'" target="_blank" rel="noopener">'+e.key+'</a>'
-          +badge(e.epicStatus)
-          +'<span class="dc-name">'+esc(e.name)+'</span>'
-        +'</div>'
-        +'<div class="dc-prog">'
-          +segs(e,'dc-bar')
-          +'<span class="dc-pct">'+e.percentComplete+'%</span>'
-          +'<div class="dc-counts">'
-            +'<span class="cd">Done: '+e.done+'</span>'
-            +'<span class="ci">In Progress: '+e.inProgress+'</span>'
-            +'<span class="ct">Todo: '+e.todo+'</span>'
-          +'</div>'
-        +'</div>'
-        +'</div>';
-    });
-    h+='</div>';
-  });
-  document.getElementById('details').innerHTML=h;
-}
+                // Load latest week by default
+                select.value = manifest.latest;
+                await loadWeekData(manifest.latest);
 
-function render(){
-  const f=document.getElementById('sf').value;
-  renderChart(f);
-  renderDetails(f);
-}
+                // Add change listener
+                select.addEventListener('change', (e) => loadWeekData(e.target.value));
+            } catch (error) {
+                console.error('Error loading manifest:', error);
+                document.getElementById('content').innerHTML = 
+                    '<div class="loading">Error loading report data</div>';
+            }
+        }
 
-function loadWeek(weekId){
-  currentWeek=weekId;
-  D=WEEKS[weekId];
-  updateMetaBox();
-  renderCards();
-  renderComparisonCards();
-  renderScopeChanges();
-  initFilter();
-  render();
-}
+        // Load specific week data
+        async function loadWeekData(weekId) {
+            try {
+                const response = await fetch(`data/${weekId}.json`);
+                const data = await response.json();
+                
+                // Load previous week data if available
+                const weekNumber = parseInt(weekId.match(/W(\d+)/)[1]);
+                const year = weekId.match(/(\d{4})/)[1];
+                const prevWeekId = `W${weekNumber - 1}-${year}`;
+                
+                try {
+                    const prevResponse = await fetch(`data/${prevWeekId}.json`);
+                    previousData = await prevResponse.json();
+                } catch {
+                    previousData = null;
+                }
+                
+                currentData = data;
+                renderReport();
+            } catch (error) {
+                console.error('Error loading week data:', error);
+            }
+        }
 
-updateMetaBox();
-renderCards();
-renderComparisonCards();
-renderScopeChanges();
-initFilter();
-render();
+        // Calculate delta
+        function calculateDelta(current, previous) {
+            if (!previous) return null;
+            return current - previous;
+        }
 
-document.getElementById('weekSelect').addEventListener('change',(e)=>{loadWeek(e.target.value)});
-document.getElementById('sf').addEventListener('change',render);
-</script>
+        // Format delta
+        function formatDelta(delta) {
+            if (delta === null) return '';
+            const sign = delta > 0 ? '+' : '';
+            return `${sign}${delta}`;
+        }
+
+        // Get delta class
+        function getDeltaClass(delta, inverse = false) {
+            if (delta === null) return 'neutral';
+            if (inverse) {
+                return delta < 0 ? 'positive' : delta > 0 ? 'negative' : 'neutral';
+            }
+            return delta > 0 ? 'positive' : delta < 0 ? 'negative' : 'neutral';
+        }
+
+        // Render complete report
+        function renderReport() {
+            const prev = previousData ? previousData.summary : null;
+            const curr = currentData.summary;
+
+            const epicDelta = calculateDelta(curr.totalEpics, prev?.totalEpics);
+            const storyDelta = calculateDelta(curr.totalStories, prev?.totalStories);
+            const doneDelta = calculateDelta(curr.completedStories, prev?.completedStories);
+            const pctDelta = calculateDelta(curr.percentComplete, prev?.percentComplete);
+
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Epics</div>
+                        <div class="metric-value">${curr.totalEpics}</div>
+                        ${epicDelta !== null ? `<span class="metric-delta ${getDeltaClass(epicDelta)}">${formatDelta(epicDelta)} from last week</span>` : ''}
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Total Stories</div>
+                        <div class="metric-value">${curr.totalStories}</div>
+                        ${storyDelta !== null ? `<span class="metric-delta ${getDeltaClass(storyDelta)}">${formatDelta(storyDelta)} from last week</span>` : ''}
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Completed Stories</div>
+                        <div class="metric-value">${curr.completedStories}</div>
+                        ${doneDelta !== null ? `<span class="metric-delta ${getDeltaClass(doneDelta)}">${formatDelta(doneDelta)} from last week</span>` : ''}
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Percent Complete</div>
+                        <div class="metric-value">${curr.percentComplete}%</div>
+                        ${pctDelta !== null ? `<span class="metric-delta ${getDeltaClass(pctDelta)}">${formatDelta(pctDelta)}pp from last week</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">Story Distribution by Status</div>
+                        <div class="chart-wrapper">
+                            <canvas id="storyDistChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Throughput</div>
+                        <div class="chart-wrapper">
+                            <canvas id="throughputChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="distribution-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">Epic Distribution by Status</div>
+                        <div class="chart-wrapper tall">
+                            <canvas id="epicDistChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Destroy existing charts
+            Object.values(chartInstances).forEach(chart => chart.destroy());
+            chartInstances = {};
+
+            // Render charts
+            renderStoryDistribution();
+            renderEpicDistribution();
+            renderThroughput();
+        }
+
+        // Story distribution chart
+        function renderStoryDistribution() {
+            const ctx = document.getElementById('storyDistChart').getContext('2d');
+            const dist = currentData.storyDistribution;
+
+            chartInstances.storyDist = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Done', 'In Progress', 'Ready to Develop', 'Backlog'],
+                    datasets: [{
+                        data: [dist.done, dist.inProgress, dist.readyToDevelop, dist.backlog],
+                        backgroundColor: [
+                            'rgba(0, 212, 170, 0.8)',
+                            'rgba(77, 166, 255, 0.8)',
+                            'rgba(255, 184, 77, 0.8)',
+                            'rgba(95, 101, 114, 0.5)'
+                        ],
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(21, 25, 34, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            borderColor: '#252b3a',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#252b3a' },
+                            ticks: { color: '#9aa0ac' }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#9aa0ac', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Epic distribution chart
+        function renderEpicDistribution() {
+            const ctx = document.getElementById('epicDistChart').getContext('2d');
+            const dist = currentData.epicDistribution;
+
+            chartInstances.epicDist = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Closed', 'Ready Deployment', 'In Development', 'Ready to Develop', 'Design', 'Discover', 'Backlog'],
+                    datasets: [{
+                        data: [
+                            dist.closed,
+                            dist.readyDeployment,
+                            dist.inDevelopment,
+                            dist.readyToDevelop,
+                            dist.design,
+                            dist.discover,
+                            dist.backlog
+                        ],
+                        backgroundColor: [
+                            'rgba(0, 212, 170, 0.8)',
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(77, 166, 255, 0.8)',
+                            'rgba(255, 184, 77, 0.8)',
+                            'rgba(245, 87, 108, 0.8)',
+                            'rgba(158, 119, 237, 0.8)',
+                            'rgba(95, 101, 114, 0.5)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#151922'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                color: '#9aa0ac',
+                                font: { size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(21, 25, 34, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            borderColor: '#252b3a',
+                            borderWidth: 1
+                        }
+                    }
+                }
+            });
+        }
+
+        // Throughput chart
+        function renderThroughput() {
+            const ctx = document.getElementById('throughputChart').getContext('2d');
+            const throughput = currentData.throughput;
+
+            chartInstances.throughput = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Last 30 Days', 'Avg per Week'],
+                    datasets: [{
+                        data: [throughput.last30Days, throughput.averagePerWeek],
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(77, 166, 255, 0.8)'
+                        ],
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(21, 25, 34, 0.95)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            borderColor: '#252b3a',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#252b3a' },
+                            ticks: { color: '#9aa0ac' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9aa0ac' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        loadManifest();
+    </script>
 </body>
 </html>
