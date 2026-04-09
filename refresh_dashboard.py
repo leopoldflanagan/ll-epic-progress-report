@@ -14,8 +14,8 @@ import re
 
 # Jira Configuration
 JIRA_BASE_URL = "https://wellfit.atlassian.net"
-JIRA_API_BASE = f"{JIRA_BASE_URL}/rest/api/3"
 CLOUD_ID = "120843f0-4f3e-4c73-adfb-9880d7acb06c"
+JIRA_API_BASE = f"https://api.atlassian.com/ex/jira/{CLOUD_ID}/rest/api/3"
 
 # Epic Keys (27 active epics)
 ACTIVE_EPICS = [
