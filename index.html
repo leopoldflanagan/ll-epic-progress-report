@@ -203,7 +203,8 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
       <option value="W1-Sprint9-26">W1 - Sprint 9-26 (March 19)</option>
       <option value="W2-Sprint9-26">W2 - Sprint 9-26 (March 26)</option>
       <option value="W1-Sprint10-26">W1 - Sprint 10-26 (April 02)</option>
-      <option value="W2-Sprint10-26" selected>W2 - Sprint 10-26 (April 09)</option>
+      <option value="W2-Sprint10-26">W2 - Sprint 10-26 (April 09)</option>
+      <option value="W1-Sprint11-26" selected>W1 - Sprint 11-26 (April 16)</option>
     </select>
     <span class="baseline-indicator">Week-over-week comparisons shown below</span>
   </div>
@@ -219,14 +220,6 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sa
   <div class="comparison-cards" id="comparisonCards"></div>
 </div>
 
-<div class="scope-panel collapsed" id="scopePanel" style="display:none">
-  <div class="scope-header" onclick="toggleScope()">
-    <h2 id="scopeTitle">📊 Scope Changes</h2>
-    <div class="scope-summary" id="scopeSummary"></div>
-    <button class="scope-toggle" id="scopeToggleBtn">View Details ▼</button>
-  </div>
-  <div class="scope-body" id="scopeBody"></div>
-</div>
 
 <div class="controls">
   <div class="filter-grp">
@@ -349,6 +342,16 @@ const WEEKS={'W2-Sprint8-26':{date:'March 15, 2026',totalEpics:40,totalStories:7
     {key:"LL-85",name:"Marketplace - MVP - Subscription Purchases In inside Plans Purchase Widget - #6 (FF)",epicStatus:"IN-DEVELOPMENT",total:14,done:4,inProgress:2,todo:8,percentComplete:28}
   ],
   scopeChanges:null
+},'W1-Sprint11-26':{
+  date:'April 16, 2026',
+  totalEpics:32,
+  totalStories:184,
+  excludedWNI:23,
+  excludedReebit:6,
+  summary:{totalDone:83,totalInProgress:26,totalTodo:75,overallPercent:45},
+  weeklyThroughput:{completed:83,delta:5,vsWeek:'W2-Sprint10-26'},
+  epics:[{key:"LL-120",name:"Market Place - MVP -CSP Monthly Plans Config Set -Up",epicStatus:"IN-DEVELOPMENT",total:6,done:4,inProgress:1,todo:1,percentComplete:67},{key:"LL-300",name:"PMP - Create Plan Details Section",epicStatus:"IN-DEVELOPMENT",total:5,done:4,inProgress:1,todo:0,percentComplete:80},{key:"LL-307",name:"FE - Custom Website - Landing Page Forces Practice Selection",epicStatus:"IN-DEVELOPMENT",total:10,done:8,inProgress:1,todo:1,percentComplete:80},{key:"LL-308",name:"LL Dynamic Support Contact Info Displayed Across Portals",epicStatus:"IN-DEVELOPMENT",total:18,done:13,inProgress:4,todo:1,percentComplete:72},{key:"LL-349",name:"LL Additional Benefits Configuration and Member Portal Display",epicStatus:"IN-DEVELOPMENT",total:8,done:2,inProgress:5,todo:1,percentComplete:25},{key:"LL-350",name:"LL Updates to Plan Details PDF",epicStatus:"IN-DEVELOPMENT",total:9,done:9,inProgress:0,todo:0,percentComplete:100},{key:"LL-354",name:"PMP and Purchase Portals - Plan is Tied to Practice at Time of Purchase",epicStatus:"IN-DEVELOPMENT",total:7,done:7,inProgress:0,todo:0,percentComplete:100},{key:"LL-355",name:"FE - Website - Add Link to Member Portal and Support Page",epicStatus:"IN-DEVELOPMENT",total:2,done:2,inProgress:0,todo:0,percentComplete:100},{key:"LL-85",name:"Marketplace - MVP - Subscription Purchases In inside Plans Purchase Widget - #6 (FF)",epicStatus:"IN-DEVELOPMENT",total:14,done:6,inProgress:4,todo:4,percentComplete:43},{key:"LL-115",name:"Plans Marketplace - CSP Status in Search (FF)",epicStatus:"READY TO DEVELOP",total:2,done:0,inProgress:0,todo:2,percentComplete:0},{key:"LL-618",name:"KOS Dental Dreams Custom Website",epicStatus:"READY TO DEVELOP",total:32,done:24,inProgress:3,todo:5,percentComplete:75},{key:"LL-106",name:"Marketplace - MVP - Member Portal Changes to Support Monthly Payments(FF)",epicStatus:"DESIGN",total:6,done:0,inProgress:0,todo:6,percentComplete:0},{key:"LL-131",name:"Phase 2 - QA Functional Testing for Marketplace",epicStatus:"DESIGN",total:12,done:0,inProgress:0,todo:12,percentComplete:0},{key:"LL-309",name:"Allow Design Profile for Purchase Widget",epicStatus:"DESIGN",total:3,done:2,inProgress:0,todo:1,percentComplete:67},{key:"LL-310",name:"PMP Advanced Member Search",epicStatus:"DESIGN",total:4,done:1,inProgress:0,todo:3,percentComplete:25},{key:"LL-328",name:"LL Data Migration and Onboarding for DCA",epicStatus:"DESIGN",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-359",name:"ACH Frontend - Reporting",epicStatus:"DESIGN",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-361",name:"ACH Frontend - Manage ACH Records in Plans Office Payments",epicStatus:"DESIGN",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-48",name:"Link Back to Client Website from Smilehealth",epicStatus:"DESIGN",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-75",name:"Hide Treatment Summaries in Member Portal for Non-Integrated Offices",epicStatus:"DESIGN",total:1,done:0,inProgress:0,todo:1,percentComplete:0},{key:"LL-78",name:"Plans Marketplace - Subscription Payment CRM Communication Changes",epicStatus:"DESIGN",total:5,done:0,inProgress:0,todo:5,percentComplete:0},{key:"LL-142",name:"Plans Marketplace - POST MVP - CSP Updates for Monthly Payments/Managing Status",epicStatus:"DISCOVER",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-311",name:"EDW - LL Reporting Changes Needed to Support DCA",epicStatus:"DISCOVER",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-74",name:"WAIVEFAM Promo Code Creation & Ability to Use",epicStatus:"DISCOVER",total:2,done:1,inProgress:1,todo:0,percentComplete:50},{key:"LL-140",name:"Take a Payment - Rework UI",epicStatus:"Backlog",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-200",name:"Support Multiple Payment Terms for Plan Purchases",epicStatus:"Backlog",total:0,done:0,inProgress:0,todo:0,percentComplete:0},{key:"LL-601",name:"Updates to Marketing Details",epicStatus:"Backlog",total:15,done:0,inProgress:2,todo:13,percentComplete:0},{key:"LL-788",name:"DCA: Dynamic Content Integration (ETL + Support Info)",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-789",name:"DCA: Navigation Restructure & Bug Fixes",epicStatus:"Backlog",total:4,done:0,inProgress:0,todo:4,percentComplete:0},{key:"LL-790",name:"DCA: Content & Disclaimer Corrections",epicStatus:"Backlog",total:4,done:0,inProgress:0,todo:4,percentComplete:0},{key:"LL-791",name:"DCA: FAQ Updates",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0},{key:"LL-792",name:"DCA: UI/Styling & Visual Standardization",epicStatus:"Backlog",total:3,done:0,inProgress:0,todo:3,percentComplete:0}],
+  scopeChanges:{metrics:{baselineEpics:27,currentEpics:32,netChange:5,percentChange:18.5,baselineStories:150,currentStories:184,storyNetChange:34}}
 }};
 
 const ORDER=['CLOSED','READY DEPLOYMENT','IN-DEVELOPMENT','READY TO DEVELOP','DESIGN','DISCOVER','Backlog','BLOCKED'];
@@ -357,7 +360,7 @@ function bCls(s){return'b-'+s.replace(/ /g,'_')}
 function blCls(s){return'bl-'+s.replace(/ /g,'_')}
 const MIN_W=30;
 
-let currentWeek='W2-Sprint10-26';
+let currentWeek='W1-Sprint11-26';
 let D=WEEKS[currentWeek];
 
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -388,12 +391,6 @@ function toggle(id){
   document.getElementById(id+'-a').classList.toggle('collapsed');
 }
 
-function toggleScope(){
-  const panel=document.getElementById('scopePanel');
-  const btn=document.getElementById('scopeToggleBtn');
-  panel.classList.toggle('collapsed');
-  btn.textContent=panel.classList.contains('collapsed')?'View Details ▼':'Collapse ▲';
-}
 
 function updateMetaBox(){
   const prevWeekId = D.weeklyThroughput?.vsWeek;
@@ -411,45 +408,6 @@ function updateMetaBox(){
   document.getElementById('metaBox').innerHTML=html;
 }
 
-function renderScopeChanges(){
-  const sc=D.scopeChanges;
-  if(!sc){
-    document.getElementById('scopePanel').style.display='none';
-    return;
-  }
-  const prevWeekId = D.weeklyThroughput?.vsWeek || 'previous week';
-  document.getElementById('scopePanel').style.display='block';
-  document.getElementById('scopeTitle').textContent=`📊 Scope Changes (${currentWeek} vs ${prevWeekId})`;
-  const m=sc.metrics;
-  let summaryHTML=`<span class="scope-metric">+${m.percentChange.toFixed(1)}% Epic Growth (${m.baselineEpics} → ${m.currentEpics})</span>`;
-  summaryHTML+=`<span class="scope-metric">+${sc.addedEpics.length} New Epics</span>`;
-  if(sc.movedToReebit.length>0)summaryHTML+=`<span class="scope-metric">${sc.movedToReebit.length} Reclassified</span>`;
-  document.getElementById('scopeSummary').innerHTML=summaryHTML;
-  let bodyHTML='';
-  if(sc.addedEpics.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>✅ NEW EPICS ADDED (${sc.addedEpics.length})</h4>`;
-    sc.addedEpics.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  if(sc.movedToReebit.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>⚠️ SCOPE MOVEMENTS</h4>`;
-    sc.movedToReebit.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-reason">→ Moved to Reenbit vendor scope</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  if(sc.storyBreakdownChanges.length>0){
-    bodyHTML+=`<div class="scope-section"><h4>ℹ️ STORY REFINEMENT</h4><div class="refinement-note">Not counted as scope change - same epic, better understanding of work</div>`;
-    sc.storyBreakdownChanges.forEach(e=>{
-      bodyHTML+=`<div class="scope-item"><a href="${jira(e.key)}" target="_blank">${e.key}</a><span class="scope-item-name">${esc(e.name)}</span><span class="scope-item-count">${e.was}→${e.now} stories (+${e.delta})</span></div>`;
-    });
-    bodyHTML+=`</div>`;
-  }
-  bodyHTML+=`<div class="scope-section net-impact"><h4>📈 NET IMPACT</h4><p>Baseline: ${m.baselineEpics} epics<br>Added: +${sc.addedEpics.length} epics<br>Moved: -${sc.movedToReebit.length} epic (to Reenbit)<br>Current: ${m.currentEpics} epics<br><strong>Change: +${m.netChange} epics (+${m.percentChange.toFixed(1)}% scope growth)</strong></p></div>`;
-  document.getElementById('scopeBody').innerHTML=bodyHTML;
-}
 
 function renderComparisonCards(){
   // Solo mostrar si hay semana previa
@@ -500,9 +458,11 @@ function renderComparisonCards(){
   html+=`<div class="comp-card">
     <div class="comp-card-label">Throughput</div>
     <div class="comp-card-change">
+      <div class="comp-prev">${prev.weeklyThroughput?.completed || 0}</div>
+      <div class="comp-arrow">↓</div>
       <div class="comp-current">${throughput}</div>
-      <div class="comp-metric">stories completed</div>
     </div>
+    <div class="comp-metric">stories completed</div>
     <div class="comp-delta ${throughputDelta>0?'positive':throughputDelta<0?'negative':'neutral'}">
       ${Math.abs(throughputDelta)} ${throughputDelta>0?'↑':throughputDelta<0?'↓':''} vs last week
     </div>
@@ -624,7 +584,6 @@ function loadWeek(weekId){
   updateMetaBox();
   renderCards();
   renderComparisonCards();
-  renderScopeChanges();
   initFilter();
   render();
 }
@@ -632,7 +591,6 @@ function loadWeek(weekId){
 updateMetaBox();
 renderCards();
 renderComparisonCards();
-renderScopeChanges();
 initFilter();
 render();
 
